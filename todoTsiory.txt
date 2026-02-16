@@ -1,0 +1,46 @@
+Gestion des villes
+
+✔ Interface :
+
+Page liste des villes
+
+Formulaire ajout ville
+
+(optionnel) suppression
+
+✔ Backend :
+
+Route GET /villes
+
+Route POST /villes/add
+
+Modèle Ville
+
+2️⃣ Dashboard principal
+
+Page tableau de bord avec :
+
+Liste des villes
+
+Pour chaque ville :
+
+Total besoins
+
+Total dons attribués
+
+Reste
+
+✔ Interface tableau Bootstrap
+✔ Requêtes SQL avec GROUP BY
+✔ Calcul des totaux
+
+3️⃣ Affichage détail d’une ville
+
+Page :
+/ville/{id}
+
+Afficher :
+
+Liste des besoins
+
+Liste des dons reçus (via dispatch)
