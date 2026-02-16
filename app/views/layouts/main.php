@@ -192,6 +192,16 @@
                             <i class="fas fa-home"></i> Accueil
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/besoins">
+                            <i class="fas fa-clipboard-list"></i> Besoins
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/besoins/list">
+                            <i class="fas fa-list"></i> Liste des besoins
+                        </a>
+                    </li>
                     <?php if (isset($_SESSION['admin_id'])): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="/admin">
