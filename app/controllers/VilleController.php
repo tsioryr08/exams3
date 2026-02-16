@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/Ville.php';
+require_once __DIR__ . '/../repositories/BesoinRepository.php';
+require_once __DIR__ . '/../repositories/DispatchRepository.php';
 
 class VilleController {
     
@@ -90,6 +92,19 @@ class VilleController {
             Flight::redirect('/villes');
             return;
         }
+        
+        // Récupérer les besoins de la ville
+        $pdo = Flight::db();
+        $besoinRepo = new BesoinRepository($pdo);
+        $besoins = $besoinRepo->getAll();
+        // Filtrer par ville_id
+        $besoinsVille = array_filter($besoins, function($besoin) use ($id) {
+            return $besoin['ville_id'] == $id;
+        });
+        
+        // Récupérer les dispatches (dons reçus) de la ville
+        $dispatchRepo = new DispatchRepository($pdo);
+        $dispatches = $dispatchRepo->getByVille($id);
         
         // Capturer le contenu de la vue partielle
         ob_start();
