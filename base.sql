@@ -2,7 +2,7 @@
 -- BASE DE DONNEES : BNGRC - Suivi des dons
 -- ============================================
 
-DROP DATABASE IF EXISTS bngrc_suivi;
+DROP DATABASE IF EXISTS bngrc;
 CREATE DATABASE bngrc_suivi;
 USE bngrc_suivi;
 
