@@ -97,6 +97,9 @@ class DispatchRepository
     /**
      * Récupérer le total dispatché pour un besoin spécifique
      * @param int $villeId
+    /**
+     * Récupérer le total dispatché pour un besoin spécifique
+     * @param int $villeId
      * @param string $type
      * @param string $libelle
      * @return int
@@ -123,4 +126,32 @@ class DispatchRepository
             return 0;
         }
     }
+
+    /**
+     * Créer un dispatch à partir d'un achat
+     * @param int $achatId
+     * @param int $villeId
+     * @param string $libelle
+     * @param int $quantiteAttribuee
+     * @return bool
+     */
+    public function createFromAchat($achatId, $villeId, $libelle, $quantiteAttribuee)
+    {
+        try {
+            $sql = "INSERT INTO dispatch (don_id, ville_id, libelle, quantite_attribuee, source, achat_id) 
+                    VALUES (0, :ville_id, :libelle, :quantite_attribuee, 'achat', :achat_id)";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':ville_id' => $villeId,
+                ':libelle' => $libelle,
+                ':quantite_attribuee' => $quantiteAttribuee,
+                ':achat_id' => $achatId
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Erreur création dispatch depuis achat: " . $e->getMessage());
+            return false;
+        }
+    }
 }
+

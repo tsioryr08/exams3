@@ -50,6 +50,15 @@ class DonRepository
     }
 
     /**
+     * Récupérer tous les dons (alias de getAllOrderByDate)
+     * @return array - Liste des dons
+     */
+    public function getAll()
+    {
+        return $this->getAllOrderByDate();
+    }
+
+    /**
      * Récupérer tous les dons triés par date ASC (pour le dispatch)
      * @return array - Liste des dons
      */

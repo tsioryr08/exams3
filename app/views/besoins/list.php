@@ -100,12 +100,15 @@
                                 <td>
                                     <?php
                                     $badgeClass = 'badge-' . $besoin['type'];
-                                    $icon = match($besoin['type']) {
-                                        'nature' => '🌾',
-                                        'materiel' => '🔨',
-                                        'argent' => '💰',
-                                        default => '📦'
-                                    };
+                                    if ($besoin['type'] === 'nature') {
+                                        $icon = '🌾';
+                                    } elseif ($besoin['type'] === 'materiel') {
+                                        $icon = '🔨';
+                                    } elseif ($besoin['type'] === 'argent') {
+                                        $icon = '💰';
+                                    } else {
+                                        $icon = '📦';
+                                    }
                                     ?>
                                     <span class="badge <?= $badgeClass ?>">
                                         <?= $icon ?> <?= ucfirst($besoin['type']) ?>

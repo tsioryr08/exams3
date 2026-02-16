@@ -223,6 +223,16 @@
                             <i class="fas fa-list"></i> Liste des besoins
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/achats/besoins-restants">
+                            <i class="fas fa-shopping-cart"></i> Achats
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recap">
+                            <i class="fas fa-chart-bar"></i> Récapitulatif
+                        </a>
+                    </li>
                     <?php if (isset($_SESSION['admin_id'])): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="/admin">

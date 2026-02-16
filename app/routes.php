@@ -5,17 +5,24 @@ require_once __DIR__ . '/repositories/DonRepository.php';
 require_once __DIR__ . '/repositories/DispatchRepository.php';
 require_once __DIR__ . '/repositories/BesoinRepository.php';
 require_once __DIR__ . '/repositories/BesoinsRepository.php';
+require_once __DIR__ . '/repositories/ConfigRepository.php';
+require_once __DIR__ . '/repositories/AchatRepository.php';
+require_once __DIR__ . '/repositories/RecapRepository.php';
 
 // ================== SERVICES ==================
 require_once __DIR__ . '/services/DonService.php';
 require_once __DIR__ . '/services/DispatchService.php';
 require_once __DIR__ . '/services/BesoinsService.php';
+require_once __DIR__ . '/services/AchatService.php';
+require_once __DIR__ . '/services/RecapService.php';
 
 // ================== CONTROLLERS ==================
 require_once __DIR__ . '/controllers/DonController.php';
 require_once __DIR__ . '/controllers/DispatchController.php';
 require_once __DIR__ . '/controllers/BesoinsController.php';
 require_once __DIR__ . '/controllers/VilleController.php';
+require_once __DIR__ . '/controllers/AchatController.php';
+require_once __DIR__ . '/controllers/RecapController.php';
 
 // ================== ROUTES HOME ==================
 Flight::route('GET /', ['VilleController', 'index']);
@@ -39,3 +46,17 @@ Flight::route('GET /dispatch', [new DispatchController(), 'index']);
 Flight::route('GET /besoins', ['BesoinsController', 'showForm']);
 Flight::route('POST /besoins', ['BesoinsController', 'createBesoin']);
 Flight::route('GET /besoins/list', ['BesoinsController', 'listBesoins']);
+
+// ================== ROUTES ACHATS (V2 - NOUVELLE FONCTIONNALITÉ) ==================
+$achatController = new AchatController();
+
+Flight::route('GET /achats/besoins-restants', [$achatController, 'showBesoinsRestants']);
+Flight::route('POST /achats/simuler', [$achatController, 'simuler']);
+Flight::route('POST /achats/valider', [$achatController, 'valider']);
+Flight::route('GET /achats/liste', [$achatController, 'liste']);
+
+// ================== ROUTES RÉCAPITULATIF (V2 - NOUVELLE FONCTIONNALITÉ) ==================
+$recapController = new RecapController();
+
+Flight::route('GET /recap', [$recapController, 'index']);
+Flight::route('GET /recap/ajax', [$recapController, 'ajax']);
