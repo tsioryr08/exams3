@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700;800&family=Dancing+Script:wght@400;500;600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --beige-primary: #D4C2A1;
@@ -199,6 +199,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/villes">
+                            <i class="fas fa-map-marked-alt"></i> Villes
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/dons">
                             <i class="fas fa-gift"></i> Dons
                         </a>
@@ -224,17 +229,9 @@
                                 <i class="fas fa-tachometer-alt"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/logout">
-                                <i class="fas fa-sign-out-alt"></i> Déconnexion
-                            </a>
-                        </li>
+                        
                     <?php else: ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/login">
-                                <i class="fas fa-user-shield"></i> Administration
-                            </a>
-                        </li>
+                        
                     <?php endif; ?>
                 </ul>
             </div>

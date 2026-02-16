@@ -15,11 +15,17 @@ require_once __DIR__ . '/services/BesoinsService.php';
 require_once __DIR__ . '/controllers/DonController.php';
 require_once __DIR__ . '/controllers/DispatchController.php';
 require_once __DIR__ . '/controllers/BesoinsController.php';
+require_once __DIR__ . '/controllers/VilleController.php';
 
 // ================== ROUTES HOME ==================
-Flight::route('GET /', function () {
-    Flight::render('layouts/main', ['content' => '<div class="container"><h1>Bienvenue sur BNGRC Donating</h1><p>Utilisez le menu pour gérer les dons, besoins et dispatch.</p></div>']);
-});
+Flight::route('GET /', ['VilleController', 'index']);
+
+// ================== ROUTES VILLES (DEV-TSIORY) ==================
+Flight::route('GET /villes', ['VilleController', 'index']);
+Flight::route('GET /villes/add', ['VilleController', 'add']);
+Flight::route('POST /villes/add', ['VilleController', 'store']);
+Flight::route('GET /villes/delete/@id', ['VilleController', 'delete']);
+Flight::route('GET /villes/@id', ['VilleController', 'detail']);
 
 // ================== ROUTES DONS (DEV-NJARY) ==================
 Flight::route('GET /dons', [new DonController(), 'index']);
