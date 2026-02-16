@@ -6,33 +6,40 @@
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
     }
     .page-title {
-        color: var(--beige-primary);
+        color: #4A3A6A;
         margin-bottom: 30px;
-        font-weight: 600;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        letter-spacing: -1px;
     }
     .table {
         border-radius: 10px;
         overflow: hidden;
     }
     .table thead {
-        background: var(--beige-primary);
-        color: var(--text-dark);
+        background: linear-gradient(135deg, #B8A8D9 0%, #A8C5E6 100%);
+        color: #2C2C2C;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+    }
+    .table tbody {
+        font-family: 'Inter', sans-serif;
     }
     .badge {
         padding: 5px 10px;
-        border-radius: 5px;
+        border-radius: 6px;
     }
     .badge-nature {
-        background-color: #28a745;
-        color: white;
+        background-color: #A8D5BA;
+        color: #2C5F3F;
     }
     .badge-materiel {
-        background-color: #fd7e14;
-        color: white;
+        background-color: burlywood;
+        color: #8B5A00;
     }
     .badge-argent {
-        background-color: #ffc107;
-        color: #333;
+        background-color: #FFE5A3;
+        color: #8B7000;
     }
     .empty-state {
         text-align: center;
@@ -44,8 +51,28 @@
         margin-bottom: 20px;
     }
     .total-row {
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, #E8DFF5 0%, #DDE9F5 100%);
         font-weight: bold;
+        color: #4A3A6A;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .alert-info {
+        background-color: #E8F0F8;
+        border-left: 4px solid #A8C5E6;
+        color: #2C2C2C;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #B8A8D9 0%, #A8C5E6 100%);
+        border: none;
+        color: #2C2C2C;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #A89BC9 0%, #98B5D6 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(184, 168, 217, 0.3);
+        color: #2C2C2C;
     }
 </style>
 
@@ -53,8 +80,8 @@
     <div class="list-container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="page-title mb-1">📋 Liste des Besoins</h2>
-                <p class="text-muted">Tous les besoins enregistrés dans le système</p>
+                <h2 class="page-title mb-1">Liste des Besoins</h2>
+                
             </div>
             <div>
                 <a href="/besoins" class="btn btn-primary">
@@ -77,14 +104,14 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>🏙️ Ville</th>
-                            <th>📦 Type</th>
-                            <th>📝 Libellé</th>
-                            <th>💵 Prix unitaire</th>
-                            <th>🔢 Quantité</th>
-                            <th>💰 Total</th>
-                            <th>📅 Date</th>
+                           
+                            <th> Ville</th>
+                            <th>Type</th>
+                            <th> Libellé</th>
+                            <th> Prix unitaire</th>
+                            <th> Quantité</th>
+                            <th> Total</th>
+                            <th> Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,7 +122,7 @@
                             $grandTotal += $total;
                         ?>
                             <tr>
-                                <td><?= $index + 1 ?></td>
+                                
                                 <td><strong><?= htmlspecialchars($besoin['ville']) ?></strong></td>
                                 <td>
                                     <?php
@@ -122,7 +149,7 @@
                             </tr>
                         <?php endforeach; ?>
                         <tr class="total-row">
-                            <td colspan="6" class="text-end">TOTAL GÉNÉRAL :</td>
+                            <td colspan="5" class="text-end">TOTAL GÉNÉRAL :</td>
                             <td colspan="2">
                                 <strong><?= number_format($grandTotal, 2, ',', ' ') ?> Ar</strong>
                             </td>
@@ -133,7 +160,7 @@
 
             <div class="mt-4">
                 <div class="alert alert-info">
-                    <strong>ℹ️ Statistiques :</strong>
+                    <strong>Statistiques :</strong>
                     <ul class="mb-0">
                         <li>Nombre total de besoins : <strong><?= count($besoins) ?></strong></li>
                         <li>Montant total : <strong><?= number_format($grandTotal, 2, ',', ' ') ?> Ar</strong></li>

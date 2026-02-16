@@ -13,25 +13,29 @@
         font-weight: 600;
     }
     .info-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: linear-gradient(135deg, #B8A8D9 0%, #A8C5E6 100%);
+        color: #2C2C2C;
         padding: 20px;
         border-radius: 10px;
         margin-bottom: 30px;
+        border: 1px solid rgba(184, 168, 217, 0.3);
     }
     .info-card h4 {
         margin-bottom: 10px;
         font-size: 1.1rem;
+        color: #5A4A7A;
     }
     .info-card .montant {
         font-size: 2rem;
         font-weight: bold;
+        color: #4A3A6A;
     }
     .filter-section {
-        background: #f8f9fa;
+        background: #F5F0E8;
         padding: 15px;
         border-radius: 10px;
         margin-bottom: 20px;
+        border: 1px solid #E8DCC8;
     }
     .table-besoins {
         border-radius: 10px;
@@ -42,31 +46,38 @@
         color: var(--text-dark);
     }
     .badge-nature {
-        background-color: #28a745;
-        color: white;
+        background-color: #A8D5BA;
+        color: #2C5F3F;
+        padding: 5px 10px;
+        border-radius: 6px;
     }
     .badge-materiel {
-        background-color: #fd7e14;
-        color: white;
+        background-color: #FFD4A3;
+        color: #8B5A00;
+        padding: 5px 10px;
+        border-radius: 6px;
     }
     .achetable {
-        background-color: #e8f5e9;
+        background-color: #E8F5E9;
     }
     .non-achetable {
-        background-color: #ffebee;
-        opacity: 0.7;
+        background-color: #FFE5E8;
+        opacity: 0.8;
     }
     .btn-simuler {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #B8A8D9 0%, #A8C5E6 100%);
         border: none;
-        color: white;
+        color: #2C2C2C;
         padding: 12px 30px;
-        font-weight: bold;
+        font-weight: 600;
         border-radius: 8px;
+        transition: all 0.3s ease;
     }
     .btn-simuler:hover {
+        background: linear-gradient(135deg, #A89BC9 0%, #98B5D6 100%);
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 5px 15px rgba(184, 168, 217, 0.3);
+        color: #2C2C2C;
     }
 </style>
 
@@ -77,14 +88,12 @@
             <p class="text-muted">Sélectionnez les besoins à acheter avec les dons en argent</p>
         </div>
 
-        <!-- Info argent disponible -->
         <div class="info-card">
-            <h4>💰 Argent Disponible</h4>
+            <h4>Argent Disponible</h4>
             <div class="montant"><?= number_format($argent_disponible, 2, ',', ' ') ?> Ar</div>
             <small>Frais d'achat appliqués : <?= $frais_pourcentage ?>%</small>
         </div>
 
-        <!-- Filtre par ville -->
         <div class="filter-section">
             <form method="GET" action="/achats/besoins-restants" class="row g-3">
                 <div class="col-md-4">
@@ -169,16 +178,16 @@
                         <span id="selectedCount" class="text-muted">0 besoin(s) sélectionné(s)</span>
                     </div>
                     <div>
-                        <a href="/achats/liste" class="btn btn-secondary me-2">📋 Voir les achats</a>
+                        <a href="/achats/liste" class="btn btn-secondary me-2"> Voir les achats</a>
                         <button type="submit" class="btn btn-simuler" id="btnSimuler" disabled>
-                            🔍 Simuler les achats
+                            Simuler les achats
                         </button>
                     </div>
                 </div>
             </form>
 
             <div class="alert alert-warning mt-3">
-                <strong>⚠️ Important :</strong> 
+                <strong> Bon a savoir :</strong> 
                 <ul class="mb-0 mt-2">
                     <li>Les achats avec frais de <?= $frais_pourcentage ?>% seront déduits de l'argent disponible</li>
                     <li>Vous ne pouvez acheter que les besoins en <strong>nature</strong> et <strong>matériel</strong></li>

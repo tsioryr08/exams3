@@ -29,13 +29,13 @@
 <div class="container">
     <div class="form-container">
         <div class="text-center mb-4">
-            <h2 class="form-title">📋 Nouveau Besoin</h2>
+            <h2 class="form-title"> Nouveau Besoin</h2>
             <p class="text-muted">Enregistrer un nouveau besoin pour une ville sinistrée</p>
         </div>
 
         <?php if (isset($success) && !empty($success)): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>✅ Succès !</strong> <?= htmlspecialchars($success) ?>
+                <strong>Succès !</strong> <?= htmlspecialchars($success) ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
@@ -55,7 +55,7 @@
         <form action="/besoins" method="POST">
             <!-- Ville -->
             <div class="mb-3">
-                <label for="ville_id" class="form-label">🏙️ Ville *</label>
+                <label for="ville_id" class="form-label">🏙️ Ville </label>
                 <select class="form-select" id="ville_id" name="ville_id" required>
                     <option value="">-- Sélectionner une ville --</option>
                     <?php foreach ($villes as $ville): ?>
@@ -69,7 +69,7 @@
 
             <!-- Type -->
             <div class="mb-3">
-                <label for="type" class="form-label">📦 Type de besoin *</label>
+                <label for="type" class="form-label">📦 Type de besoin </label>
                 <select class="form-select" id="type" name="type" required>
                     <option value="">-- Sélectionner un type --</option>
                     <option value="nature" <?= (isset($old['type']) && $old['type'] == 'nature') ? 'selected' : '' ?>>
@@ -86,7 +86,7 @@
 
             <!-- Libellé -->
             <div class="mb-3">
-                <label for="libelle" class="form-label">📝 Libellé *</label>
+                <label for="libelle" class="form-label">📝 Libellé </label>
                 <input type="text" 
                        class="form-control" 
                        id="libelle" 
@@ -99,7 +99,7 @@
 
             <!-- Prix unitaire -->
             <div class="mb-3">
-                <label for="prix_unitaire" class="form-label">💵 Prix unitaire (Ar) *</label>
+                <label for="prix_unitaire" class="form-label">💵 Prix unitaire (Ar) </label>
                 <input type="number" 
                        class="form-control" 
                        id="prix_unitaire" 
@@ -113,7 +113,7 @@
 
             <!-- Quantité -->
             <div class="mb-3">
-                <label for="quantite" class="form-label">🔢 Quantité *</label>
+                <label for="quantite" class="form-label">🔢 Quantité </label>
                 <input type="number" 
                        class="form-control" 
                        id="quantite" 
@@ -126,7 +126,7 @@
 
             <!-- Date -->
             <div class="mb-4">
-                <label for="date_saisie" class="form-label">📅 Date de saisie *</label>
+                <label for="date_saisie" class="form-label">📅 Date de saisie </label>
                 <input type="date" 
                        class="form-control" 
                        id="date_saisie" 
@@ -135,10 +135,9 @@
                        required>
             </div>
 
-            <!-- Boutons -->
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    ✅ Enregistrer le besoin
+                     Enregistrer le besoin
                 </button>
                 <a href="/besoins/list" class="btn btn-outline-secondary">
                     📋 Voir la liste des besoins

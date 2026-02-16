@@ -256,19 +256,28 @@ class AchatService
     }
 
     /**
-     * Vérifier si un don direct existe pour ce type et libellé
+     * Vérifier si un don direct NON DISPATCHÉ existe pour ce type et libellé
      * @param string $type
      * @param string $libelle
      * @return bool
      */
     private function verifierDonDirectExistant($type, $libelle)
     {
-        $dons = $this->donRepo->getAll();
-        foreach ($dons as $don) {
-            if ($don['type'] === $type && $don['libelle'] === $libelle && $don['quantite'] > 0) {
-                return true;
-            }
-        }
-        return false;
+        // Vérifier s'il reste des quantités de dons non dispatchées
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                d.id,
+                d.quantite AS quantite_totale,
+                COALESCE(SUM(disp.quantite_attribuee), 0) AS quantite_dispatchee,
+                (d.quantite - COALESCE(SUM(disp.quantite_attribuee), 0)) AS quantite_restante
+            FROM dons d
+            LEFT JOIN dispatch disp ON disp.don_id = d.id
+            WHERE d.type = ? AND d.libelle = ?
+            GROUP BY d.id
+            HAVING quantite_restante > 0
+        ");
+        $stmt->execute([$type, $libelle]);
+        
+        return $stmt->rowCount() > 0;
     }
 }

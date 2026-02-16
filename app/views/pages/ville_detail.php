@@ -60,20 +60,20 @@
                                         <tr>
                                             <td>
                                                 <?php
-                                                $typeClass = [
-                                                    'nature' => 'success',
-                                                    'materiel' => 'primary',
-                                                    'argent' => 'warning'
+                                                $typeColors = [
+                                                    'nature' => '#A8D5BA',
+                                                    'materiel' => 'burlywood',
+                                                    'argent' => '#FFE5A3'
                                                 ];
                                                 $typeIcon = [
                                                     'nature' => 'fa-leaf',
                                                     'materiel' => 'fa-tools',
                                                     'argent' => 'fa-coins'
                                                 ];
-                                                $class = $typeClass[$besoin['type']] ?? 'secondary';
+                                                $color = $typeColors[$besoin['type']] ?? '#e0e0e0';
                                                 $icon = $typeIcon[$besoin['type']] ?? 'fa-question';
                                                 ?>
-                                                <span class="badge bg-<?php echo $class; ?>">
+                                                <span class="badge" style="background-color: <?php echo $color; ?>; color: #333;">
                                                     <i class="fas <?php echo $icon; ?>"></i> 
                                                     <?php echo ucfirst($besoin['type']); ?>
                                                 </span>
@@ -118,20 +118,20 @@
                                         <tr>
                                             <td>
                                                 <?php
-                                                $typeClass = [
-                                                    'nature' => 'success',
-                                                    'materiel' => 'primary',
-                                                    'argent' => 'warning'
+                                                $typeColors = [
+                                                    'nature' => '#A8D5BA',
+                                                    'materiel' => 'burlywood',
+                                                    'argent' => '#FFE5A3'
                                                 ];
                                                 $typeIcon = [
                                                     'nature' => 'fa-leaf',
                                                     'materiel' => 'fa-tools',
                                                     'argent' => 'fa-coins'
                                                 ];
-                                                $class = $typeClass[$dispatch['type']] ?? 'secondary';
+                                                $color = $typeColors[$dispatch['type']] ?? '#e0e0e0';
                                                 $icon = $typeIcon[$dispatch['type']] ?? 'fa-question';
                                                 ?>
-                                                <span class="badge bg-<?php echo $class; ?>">
+                                                <span class="badge" style="background-color: <?php echo $color; ?>; color: #333;">
                                                     <i class="fas <?php echo $icon; ?>"></i> 
                                                     <?php echo ucfirst($dispatch['type']); ?>
                                                 </span>

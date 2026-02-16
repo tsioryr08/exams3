@@ -6,7 +6,8 @@
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
     }
     .page-title {
-        color: var(--beige-primary);
+        font-family: 'Playfair Display', serif;
+        color: #4A3A6A;
         margin-bottom: 30px;
         font-weight: 600;
     }
@@ -34,7 +35,7 @@
         background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
     }
     .stat-card.info {
-        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        background: linear-gradient(135deg, #7B5438 0%, #C9B18F 100%);
     }
     .progress-custom {
         height: 30px;
@@ -81,7 +82,7 @@
     <div class="recap-container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="page-title mb-1">📊 Récapitulatif Global</h2>
+                <h2 class="page-title mb-1">Récapitulatif Global</h2>
                 <p class="text-muted">Vue d'ensemble des besoins, dons et achats</p>
             </div>
             <div>
@@ -144,7 +145,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                <div class="stat-card" style="background: linear-gradient(135deg, #C76B66 0%, #D18A4F 100%);">
                     <h4>🛒 Argent Utilisé (Achats)</h4>
                     <div class="montant" id="argent-utilise">
                         <?= $stats['globales']['dons_argent']['utilise_format'] ?>
@@ -268,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     
                     // Afficher un message de succès
-                    showToast('✅ Statistiques actualisées avec succès !');
+                    showToast(' Statistiques actualisées avec succès !');
                 } else {
                     showToast('❌ Erreur lors de l\'actualisation', 'error');
                 }
