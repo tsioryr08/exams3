@@ -10,14 +10,32 @@ class VilleController {
         $villeModel = new Ville();
         $villes = $villeModel->getAll();
         
-        require __DIR__ . '/../../views/pages/villes_list.php';
+        // Capturer le contenu de la vue partielle
+        ob_start();
+        include Flight::get('flight.views.path') . '/pages/villes_list.php';
+        $content = ob_get_clean();
+        
+        // Rendre avec le layout
+        Flight::render('layouts/main', [
+            'content' => $content,
+            'title' => 'Liste des villes - BNGRC'
+        ]);
     }
     
     /**
      * Afficher le formulaire d'ajout
      */
     public static function add() {
-        require __DIR__ . '/../../views/pages/villes_add.php';
+        // Capturer le contenu de la vue partielle
+        ob_start();
+        include Flight::get('flight.views.path') . '/pages/villes_add.php';
+        $content = ob_get_clean();
+        
+        // Rendre avec le layout
+        Flight::render('layouts/main', [
+            'content' => $content,
+            'title' => 'Ajouter une ville - BNGRC'
+        ]);
     }
     
     /**
@@ -73,6 +91,15 @@ class VilleController {
             return;
         }
         
-        require __DIR__ . '/../../views/pages/ville_detail.php';
+        // Capturer le contenu de la vue partielle
+        ob_start();
+        include Flight::get('flight.views.path') . '/pages/ville_detail.php';
+        $content = ob_get_clean();
+        
+        // Rendre avec le layout
+        Flight::render('layouts/main', [
+            'content' => $content,
+            'title' => 'Détails ville - BNGRC'
+        ]);
     }
 }

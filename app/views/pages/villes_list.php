@@ -1,7 +1,3 @@
-<?php
-$title = 'Gestion des villes - BNGRC Donating';
-ob_start();
-?>
 <div class="container">
     <div class="text-center mb-4">
         <p style="font-family: 'Dancing Script', cursive; font-size: 1.3rem; background: linear-gradient(135deg, #8B73D9 0%, #4A8FD9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-style: italic; margin-bottom: 0; font-weight: 600;">
@@ -114,6 +110,3 @@ function confirmDelete(id, nom) {
     }
 }
 </script>
-<?php
-$content = ob_get_clean();
-require __DIR__ . '/../../app/views/layouts/main.php';

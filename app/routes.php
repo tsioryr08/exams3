@@ -25,7 +25,7 @@ Flight::route('GET /villes', ['VilleController', 'index']);
 Flight::route('GET /villes/add', ['VilleController', 'add']);
 Flight::route('POST /villes/add', ['VilleController', 'store']);
 Flight::route('GET /villes/delete/@id', ['VilleController', 'delete']);
-Flight::route('GET /villes/@id', ['VilleController', 'detail']);
+Flight::route('GET /villes/detail/@id', ['VilleController', 'detail']);
 
 // ================== ROUTES DONS (DEV-NJARY) ==================
 Flight::route('GET /dons', [new DonController(), 'index']);

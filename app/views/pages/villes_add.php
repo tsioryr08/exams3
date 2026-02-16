@@ -1,7 +1,3 @@
-<?php
-$title = 'Ajouter une ville - BNGRC Donating';
-ob_start();
-?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -65,6 +61,3 @@ ob_start();
         </div>
     </div>
 </div>
-<?php
-$content = ob_get_clean();
-require __DIR__ . '/../../app/views/layouts/main.php';

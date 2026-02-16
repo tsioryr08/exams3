@@ -1,7 +1,3 @@
-<?php
-$title = 'Détails ville - BNGRC Donating';
-ob_start();
-?>
 <div class="container">
     <div class="mb-3">
         <a href="/villes" class="btn btn-outline-secondary btn-sm">
@@ -66,6 +62,3 @@ ob_start();
         </div>
     </div>
 </div>
-<?php
-$content = ob_get_clean();
-require __DIR__ . '/../../app/views/layouts/main.php';
