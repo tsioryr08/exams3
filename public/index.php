@@ -1,8 +1,9 @@
 <?php
+// Charger l'autoloader de Composer
 require '../vendor/autoload.php';
+
+// Charger la configuration et initialiser Flight
 require '../app/bootstrap.php';
 
-// Configurer le chemin des vues
-Flight::set('flight.views.path', '../app/views');
-
+// Démarrer Flight
 Flight::start();

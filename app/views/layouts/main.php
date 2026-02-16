@@ -156,6 +156,12 @@
             font-weight: 400;
         }
         
+        .alert-success {
+            background-color: #F0FFF4;
+            color: #22543D;
+            border-left: 3px solid #38A169;
+        }
+        
         .alert-danger {
             background-color: #FFF5F5;
             color: #C53030;
@@ -190,6 +196,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">
                             <i class="fas fa-home"></i> Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dons">
+                            <i class="fas fa-gift"></i> Dons
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dispatch">
+                            <i class="fas fa-exchange-alt"></i> Dispatch
                         </a>
                     </li>
                     <li class="nav-item">
