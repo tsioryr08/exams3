@@ -1,0 +1,226 @@
+[ ] INITIALISATION DU PROJET
+    [ ] etape 1 : Preparation environnement
+        - [ ] Installer / verifier Flight
+        - [ ] Installer Composer
+        - [ ] Executer composer install
+        - [ ] Verifier vendor/
+        - [ ] Configurer autoload
+
+    [ ] etape 2 : Structure MVC
+        - [ ] Creer app/bootstrap.php
+        - [ ] Creer app/config.php
+        - [ ] Creer app/routes.php
+        - [ ] Creer public/index.php
+        - [ ] Configurer connexion PDO
+        - [ ] Tester connexion base
+
+    [ ] etape 3 : Base de donnees (ensemble)
+        - [ ] Creer base.sql
+        - [ ] Creer tables:
+            * villes
+            * besoins
+            * dons
+            * dispatch
+        - [ ] Ajouter cles etrangeres
+        - [ ] Inserer donnees de test
+        - [ ] Tester SELECT simple
+
+    [ ] etape 4 : Layout commun
+        - [ ] Integrer template Bootstrap Admin
+        - [ ] Creer layout principal (header/footer)
+        - [ ] Configurer chargement assets
+        - [ ] Tester affichage page vide
+
+
+--------------------------------------------------------------------
+
+👩‍💻[ ] FONCTIONNALITE 1 : GESTION DES VILLES(DEV A)
+    [ ] etape 1 : Repository Ville
+        - [ ] Creer app/repositories/VilleRepository.php
+        - [ ] Implementer constructeur PDO
+        - [ ] Creer getAll()
+        - [ ] Creer getById($id)
+        - [ ] Creer create($nom, $region)
+        - [ ] Gerer erreurs PDO
+
+    [ ] etape 2 : Service Ville
+        - [ ] Creer app/services/VilleService.php
+        - [ ] Injecter VilleRepository
+        - [ ] Creer list()
+        - [ ] Creer add()
+
+    [ ] etape 3 : Controller Ville
+        - [ ] Creer app/controllers/VilleController.php
+        - [ ] Implementer index() pour liste
+        - [ ] Implementer showAddForm()
+        - [ ] Implementer store()
+        - [ ] Passer donnees vers vue
+
+    [ ] etape 4 : Vues
+        - [ ] Creer app/views/villes/index.php
+        - [ ] Creer tableau liste villes
+        - [ ] Creer bouton Ajouter
+        - [ ] Creer app/views/villes/add.php
+        - [ ] Creer formulaire (nom, region)
+
+    [ ] etape 5 : Routes
+        - [ ] Ajouter GET /villes
+        - [ ] Ajouter GET /villes/add
+        - [ ] Ajouter POST /villes/add
+
+    [ ] etape 6 : Tests
+        - [ ] Ajouter une ville
+        - [ ] Verifier insertion BD
+        - [ ] Verifier affichage liste
+
+
+[ ] FONCTIONNALITE 2 : DASHBOARD
+    [ ] etape 1 : Requetes statistiques
+        - [ ] Requete total besoins par ville
+        - [ ] Requete total dons attribues
+        - [ ] Calcul reste = besoin - recu
+
+    [ ] etape 2 : Controller Dashboard
+        - [ ] Creer DashboardController.php
+        - [ ] Implementer index()
+        - [ ] Recuperer statistiques
+        - [ ] Envoyer donnees vers vue
+
+    [ ] etape 3 : Vue Dashboard
+        - [ ] Creer app/views/dashboard/index.php
+        - [ ] Tableau:
+            * Ville
+            * Total besoins
+            * Total recu
+            * Reste
+        - [ ] Ajouter bouton voir details
+
+    [ ] etape 4 : Tests
+        - [ ] Verifier calculs corrects
+        - [ ] Tester apres dispatch
+
+
+------------------------------------------------------------------------
+
+👩‍💻DEV B : MODULE BESOINS
+[ ] FONCTIONNALITE 1 : SAISIE DES BESOIN
+    [ ] etape 1 : Repository Besoin
+        - [ ] Creer BesoinRepository.php
+        - [ ] Implementer constructeur PDO
+        - [ ] Creer create()
+        - [ ] Creer getByVille($villeId)
+        - [ ] Creer getNonSatisfaits($type, $libelle)
+        - [ ] Gerer erreurs PDO
+
+    [ ] etape 2 : Service Besoin
+        - [ ] Creer BesoinService.php
+        - [ ] Injecter repository
+        - [ ] Creer add()
+        - [ ] Creer listByVille()
+
+    [ ] etape 3 : Controller Besoin
+        - [ ] Creer BesoinController.php
+        - [ ] Implementer index()
+        - [ ] Implementer showAddForm()
+        - [ ] Implementer store()
+
+    [ ] etape 4 : Vues
+        - [ ] Creer besoins/index.php
+        - [ ] Afficher liste besoins par ville
+        - [ ] Afficher quantite restante
+        - [ ] Creer besoins/add.php
+        - [ ] Formulaire:
+            * Ville (select)
+            * Type (nature/materiel/argent)
+            * Libelle
+            * Prix unitaire
+            * Quantite
+
+    [ ] etape 5 : Validation
+        - [ ] Verifier champs obligatoires
+        - [ ] Verifier quantite > 0
+        - [ ] Verifier prix > 0
+
+    [ ] etape 6 : Routes
+        - [ ] GET /besoins
+        - [ ] GET /besoins/add
+        - [ ] POST /besoins/add
+
+    [ ] etape 7 : Tests
+        - [ ] Inserer plusieurs besoins
+        - [ ] Verifier affichage correct
+
+--------------------------------------------------------
+
+👩‍💻 DEV C : MODULE DONS + DISPATCH
+[ ] FONCTIONNALITE 1 : SAISIE DES DONS
+    [ ] etape 1 : Repository Don
+        - [ ] Creer DonRepository.php
+        - [ ] Implementer create()
+        - [ ] Implementer getAllOrderByDate()
+
+    [ ] etape 2 : Service Don
+        - [ ] Creer DonService.php
+        - [ ] Injecter repository
+        - [ ] Creer add()
+        - [ ] Creer list()
+
+    [ ] etape 3 : Controller Don
+        - [ ] Creer DonController.php
+        - [ ] Implementer index()
+        - [ ] Implementer showAddForm()
+        - [ ] Implementer store()
+
+    [ ] etape 4 : Vues
+        - [ ] Creer dons/index.php
+        - [ ] Creer dons/add.php
+        - [ ] Formulaire:
+            * Type
+            * Libelle
+            * Quantite
+
+    [ ] etape 5 : Routes
+        - [ ] GET /dons
+        - [ ] GET /dons/add
+        - [ ] POST /dons/add
+
+[ ] FONCTIONNALITE 2 : DISPATCH DES DONS
+    [ ] etape 1 : Repository Dispatch
+        - [ ] Creer DispatchRepository.php
+        - [ ] Creer create()
+        - [ ] Creer getByVille()
+
+    [ ] etape 2 : Logique Dispatch (IMPORTANT)
+        - [ ] Recuperer dons triés par date ASC
+        - [ ] Pour chaque don:
+            * Recuperer besoins correspondants
+            * Trier par date
+            * Distribuer quantite
+            * Inserer dans dispatch
+            * Mettre a jour quantite besoin
+        - [ ] Gerer don partiellement utilise
+        - [ ] Gerer don totalement utilise
+        - [ ] Gerer absence de besoin correspondant
+
+    [ ] etape 3 : Controller Dispatch
+        - [ ] Creer DispatchController.php
+        - [ ] Implementer runDispatch()
+        - [ ] Rediriger vers dashboard apres execution
+
+    [ ] etape 4 : Interface
+        - [ ] Ajouter bouton "Simuler Dispatch"
+        - [ ] Ajouter message succes
+        - [ ] Optionnel: afficher resume dispatch
+
+    [ ] etape 5 : Route
+        - [ ] POST /dispatch/run
+
+    [ ] etape 6 : Tests intensifs
+        - [ ] Tester don > besoin
+        - [ ] Tester don < besoin
+        - [ ] Tester plusieurs villes
+        - [ ] Tester plusieurs types
+        - [ ] Verifier calculs dashboard apres dispatch
+
+
+
