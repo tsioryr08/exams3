@@ -6,17 +6,27 @@
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
     }
     .simulation-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #B8A8D9 0%, #A8C5E6 100%);
         color: white;
         padding: 30px;
         border-radius: 10px;
         margin-bottom: 30px;
+    }
+    .simulation-header h2 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        margin-bottom: 10px;
     }
     .simulation-result {
         background: #f8f9fa;
         padding: 20px;
         border-radius: 10px;
         margin-bottom: 20px;
+    }
+    .simulation-result h5 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        color: #4A3A6A;
     }
     .result-item {
         display: flex;
@@ -34,7 +44,22 @@
         overflow: hidden;
     }
     .table-simulation thead {
-        background: var(--beige-primary);
+        background: linear-gradient(135deg, #B8A8D9 0%, #A8C5E6 100%);
+        color: #2C2C2C;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+    }
+    .badge-nature {
+        background-color: #A8D5BA;
+        color: #2C5F3F;
+        padding: 5px 10px;
+        border-radius: 6px;
+    }
+    .badge-materiel {
+        background-color: burlywood;
+        color: #8B5A00;
+        padding: 5px 10px;
+        border-radius: 6px;
     }
     .alert-simulation {
         border-left: 4px solid;
@@ -47,18 +72,23 @@
         border-left-color: #dc3545;
         background-color: #f8d7da;
     }
+    .section-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        color: #4A3A6A;
+    }
 </style>
 
 <div class="container">
     <div class="simulation-container">
         <div class="simulation-header text-center">
-            <h2>🔍 Simulation d'Achats</h2>
+            <h2>Simulation d'Achats</h2>
             <p class="mb-0">Voici le résultat de votre simulation</p>
         </div>
 
         <?php if (!$simulation['success'] || !empty($simulation['errors'])): ?>
             <div class="alert alert-simulation error">
-                <h5>❌ Erreurs détectées</h5>
+                <h5>Erreurs détectées</h5>
                 <ul class="mb-0">
                     <?php foreach ($simulation['errors'] as $error): ?>
                         <li><?= htmlspecialchars($error) ?></li>
@@ -69,13 +99,13 @@
 
         <?php if (!empty($simulation['achats'])): ?>
             <div class="alert alert-simulation success mb-4">
-                <h5>✅ Simulation réussie !</h5>
+                <h5>Simulation réussie !</h5>
                 <p class="mb-0"><?= count($simulation['achats']) ?> achat(s) peuvent être effectués</p>
             </div>
 
             <!-- Résumé financier -->
             <div class="simulation-result">
-                <h5 class="mb-3">💰 Résumé Financier</h5>
+                <h5 class="mb-3 section-title">Résumé Financier</h5>
                 <div class="result-item">
                     <span>Montant total HT :</span>
                     <span><?= number_format($simulation['total_sans_frais'], 2, ',', ' ') ?> Ar</span>
@@ -101,12 +131,12 @@
             </div>
 
             <!-- Détails des achats -->
-            <h5 class="mt-4 mb-3">📋 Détails des Achats</h5>
+            <h5 class="mt-4 mb-3 section-title">Détails des Achats</h5>
             <div class="table-responsive">
                 <table class="table table-hover table-simulation">
                     <thead>
                         <tr>
-                            <th>#</th>
+                          
                             <th>Ville</th>
                             <th>Type</th>
                             <th>Libellé</th>
@@ -120,11 +150,10 @@
                     <tbody>
                         <?php foreach ($simulation['achats'] as $index => $achat): ?>
                             <tr>
-                                <td><?= $index + 1 ?></td>
+                               
                                 <td><strong><?= htmlspecialchars($achat['ville_nom']) ?></strong></td>
                                 <td>
                                     <span class="badge badge-<?= $achat['type'] ?>">
-                                        <?= $achat['type'] === 'nature' ? '🌾' : '🔨' ?>
                                         <?= ucfirst($achat['type']) ?>
                                     </span>
                                 </td>
@@ -143,7 +172,7 @@
             <!-- Actions -->
             <div class="mt-4 d-flex justify-content-between">
                 <a href="/achats/besoins-restants" class="btn btn-secondary">
-                    ← Retour
+                    Retour
                 </a>
                 <?php if ($simulation['success']): ?>
                     <form method="POST" action="/achats/valider" style="display:inline;">
@@ -151,7 +180,7 @@
                             <input type="hidden" name="besoin_ids[]" value="<?= $achat['besoin_id'] ?>">
                         <?php endforeach; ?>
                         <button type="submit" class="btn btn-success" onclick="return confirm('Êtes-vous sûr de valider ces achats ? Cette action est irréversible.')">
-                            ✅ Valider les achats
+                            Valider les achats
                         </button>
                     </form>
                 <?php endif; ?>
@@ -159,11 +188,11 @@
 
         <?php else: ?>
             <div class="alert alert-warning">
-                <h5>⚠️ Aucun achat possible</h5>
+                <h5>Aucun achat possible</h5>
                 <p class="mb-0">Aucun achat ne peut être effectué avec les sélections actuelles.</p>
             </div>
             <div class="text-center mt-4">
-                <a href="/achats/besoins-restants" class="btn btn-primary">← Retour aux besoins</a>
+                <a href="/achats/besoins-restants" class="btn btn-primary">Retour aux besoins</a>
             </div>
         <?php endif; ?>
     </div>
