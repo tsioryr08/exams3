@@ -153,36 +153,36 @@
 --------------------------------------------------------
 
 👩‍💻 DEV C : MODULE DONS + DISPATCH
-[ ] FONCTIONNALITE 1 : SAISIE DES DONS
-    [ ] etape 1 : Repository Don
-        - [ ] Creer DonRepository.php
-        - [ ] Implementer create()
-        - [ ] Implementer getAllOrderByDate()
+[ok] FONCTIONNALITE 1 : SAISIE DES DONS
+    [ok] etape 1 : Repository Don
+        - [ok] Creer DonRepository.php
+        - [ok] Implementer create()
+        - [ok] Implementer getAllOrderByDate()
 
-    [ ] etape 2 : Service Don
-        - [ ] Creer DonService.php
-        - [ ] Injecter repository
-        - [ ] Creer add()
-        - [ ] Creer list()
+    [ok] etape 2 : Service Don
+        - [ok] Creer DonService.php
+        - [ok] Injecter repository
+        - [ok] Creer add()
+        - [ok] Creer list()
 
-    [ ] etape 3 : Controller Don
-        - [ ] Creer DonController.php
-        - [ ] Implementer index()
-        - [ ] Implementer showAddForm()
-        - [ ] Implementer store()
+    [ok] etape 3 : Controller Don
+        - [ok] Creer DonController.php
+        - [ok] Implementer index()
+        - [ok] Implementer showAddForm()
+        - [ok] Implementer store()
 
-    [ ] etape 4 : Vues
-        - [ ] Creer dons/index.php
-        - [ ] Creer dons/add.php
-        - [ ] Formulaire:
+    [ok] etape 4 : Vues
+        - [ok] Creer dons/index.php
+        - [ok] Creer dons/add.php
+        - [ok] Formulaire:
             * Type
             * Libelle
             * Quantite
 
-    [ ] etape 5 : Routes
-        - [ ] GET /dons
-        - [ ] GET /dons/add
-        - [ ] POST /dons/add
+    [ok] etape 5 : Routes
+        - [ok] GET /dons
+        - [ok] GET /dons/add
+        - [ok] POST /dons/add
 
 [ ] FONCTIONNALITE 2 : DISPATCH DES DONS
     [ ] etape 1 : Repository Dispatch

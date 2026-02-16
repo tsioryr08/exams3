@@ -1,15 +1,12 @@
 <?php
+// Charger l'autoloader de Composer
 require '../vendor/autoload.php';
-require '../app/bootstrap.php';  // ← Utilise votre bootstrap existant
 
+// Charger la configuration et initialiser Flight
+require '../app/bootstrap.php';
 
-// Routes Admin
-Flight::route('GET /admin/login', ['AdminController', 'showLogin']);
-Flight::route('POST /admin/login', ['AdminController', 'processLogin']);
-Flight::route('GET /admin', ['AdminController', 'dashboard']);
-Flight::route('GET /admin/logout', ['AdminController', 'logout']);
+// Charger les routes
+require '../app/routes.php';
 
-// Configurer le chemin des vues
-Flight::set('flight.views.path', '../app/views');
-
+// Démarrer Flight
 Flight::start();

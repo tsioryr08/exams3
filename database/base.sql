@@ -3,8 +3,8 @@
 -- ============================================
 
 DROP DATABASE IF EXISTS bngrc;
-CREATE DATABASE bngrc_suivi;
-USE bngrc_suivi;
+CREATE DATABASE bngrc;
+USE bngrc;
 
 -- ============================================
 -- TABLE VILLES

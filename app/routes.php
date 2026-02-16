@@ -1,40 +1,30 @@
 <?php
-require_once __DIR__ . '/controllers/AuthController.php';
-require_once __DIR__ . '/services/Validator.php';
-require_once __DIR__ . '/services/UserService.php';
-require_once __DIR__ . '/repositories/UserRepository.php';
-require_once __DIR__ . '/controllers/MessageController.php';
-require_once __DIR__ . '/repositories/MessageRepository.php';
-require_once __DIR__ . '/services/MessageService.php';
-// Admin
-require_once __DIR__ . '/controllers/AdminController.php';
-require_once __DIR__ . '/repositories/CategoryRepository.php';
 
+// ================== REPOSITORIES ==================
+require_once __DIR__ . '/repositories/DonRepository.php';
+require_once __DIR__ . '/repositories/DispatchRepository.php';
+require_once __DIR__ . '/repositories/BesoinRepository.php';
+
+// ================== SERVICES ==================
+require_once __DIR__ . '/services/DonService.php';
+require_once __DIR__ . '/services/DispatchService.php';
+
+// ================== CONTROLLERS ==================
+require_once __DIR__ . '/controllers/DonController.php';
+require_once __DIR__ . '/controllers/DispatchController.php';
+
+// ================== ROUTES HOME ==================
 Flight::route('GET /', function () {
-    Flight::render('home');
+    Flight::redirect('/dons');
 });
 
-Flight::route('GET /register', ['AuthController', 'showRegister']);
-Flight::route('POST /register', ['AuthController', 'postRegister']);
-Flight::route('POST /api/validate/register', ['AuthController', 'validateRegisterAjax']);
+// ================== ROUTES DONS (DEV C) ==================
+Flight::route('GET /dons', [new DonController(), 'index']);
+Flight::route('GET /dons/add', [new DonController(), 'showAddForm']);
+Flight::route('POST /dons/add', [new DonController(), 'store']);
 
-// Messages
-Flight::route('GET /messages', ['MessageController', 'showMessages']);
-Flight::route('POST /messages/send', ['MessageController', 'sendMessage']);
-Flight::route('GET /messages/refresh', ['MessageController', 'refreshMessages']);
+// ================== ROUTES DISPATCH (DEV C) ==================
+Flight::route('GET /dispatch', [new DispatchController(), 'index']);
 
-//login
-Flight::route('GET /login', ['AuthController', 'showLogin']);
-Flight::route('POST /login', ['AuthController', 'postLogin']);
-Flight::route('GET /logout', ['AuthController', 'logout']);
-
-// Admin routes
-Flight::route('GET /admin/login', ['AdminController', 'showLogin']);
-Flight::route('POST /admin/login', ['AdminController', 'processLogin']);
-Flight::route('GET /admin', ['AdminController', 'dashboard']);
-Flight::route('GET /admin/logout', ['AdminController', 'logout']);
-Flight::route('GET /admin/categories', ['AdminController', 'listCategories']);
-Flight::route('POST /admin/categories', ['AdminController', 'createCategory']);
-Flight::route('GET /admin/categories/edit/@id', ['AdminController', 'showEditCategory']);
-Flight::route('POST /admin/categories/edit/@id', ['AdminController', 'updateCategory']);
-Flight::route('POST /admin/categories/delete/@id', ['AdminController', 'deleteCategory']);
+// ================== START ==================
+// Flight::start();
