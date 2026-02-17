@@ -143,4 +143,56 @@ class BesoinRepository
             return 0;
         }
     }
+
+    /**
+     * Récupérer les besoins par type et libellé, triés par date de création
+     * @param string $type
+     * @param string $libelle
+     * @return array
+     */
+    public function getByTypeAndLibelleOrderByDate($type, $libelle)
+    {
+        try {
+            $sql = "SELECT b.*, v.nom as ville_nom, v.region
+                    FROM besoins b
+                    JOIN villes v ON b.ville_id = v.id
+                    WHERE b.type = :type AND b.libelle = :libelle
+                    ORDER BY b.date_saisie ASC";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':type' => $type,
+                ':libelle' => $libelle
+            ]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erreur récupération besoins par date: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Récupérer les besoins par type et libellé, triés par quantité croissante
+     * @param string $type
+     * @param string $libelle
+     * @return array
+     */
+    public function getByTypeAndLibelleOrderByQuantiteAsc($type, $libelle)
+    {
+        try {
+            $sql = "SELECT b.*, v.nom as ville_nom, v.region
+                    FROM besoins b
+                    JOIN villes v ON b.ville_id = v.id
+                    WHERE b.type = :type AND b.libelle = :libelle
+                    ORDER BY b.quantite ASC";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':type' => $type,
+                ':libelle' => $libelle
+            ]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erreur récupération besoins par quantité: " . $e->getMessage());
+            return [];
+        }
+    }
 }

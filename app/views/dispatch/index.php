@@ -1,200 +1,125 @@
-<div class="container">
-    <!-- En-tête -->
-    <div class="mb-4">
-        <h1><i class="fas fa-exchange-alt"></i> Dispatch des Dons</h1>
-        <p class="text-muted">Distribution automatique des dons aux villes selon leurs besoins</p>
-    </div>
+<style>
+    .dispatch-container {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    .page-title {
+        font-family: 'Playfair Display', serif;
+        color: #4A3A6A;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+    .page-subtitle {
+        font-family: 'Inter', sans-serif;
+        color: #6c757d;
+        margin-bottom: 40px;
+    }
+    .dispatch-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: white;
+    }
+    .dispatch-card:hover {
+        border-color: #B8A8D9;
+        box-shadow: 0 8px 25px rgba(184, 168, 217, 0.2);
+        transform: translateY(-5px);
+    }
+    .dispatch-card h4 {
+        font-family: 'Montserrat', sans-serif;
+        color: #4A3A6A;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    .dispatch-card p {
+        font-family: 'Inter', sans-serif;
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+    .dispatch-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #B8A8D9 0%, #A8C5E6 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    .btn-reset {
+        background: linear-gradient(135deg, #E89B95 0%, #F0B575 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn-reset:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(232, 155, 149, 0.4);
+        color: white;
+    }
+    .alert-reset {
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+    }
+</style>
 
-    <!-- Détails du dernier dispatch -->
-    <?php if (isset($_SESSION['dispatch_details']) && !empty($_SESSION['dispatch_details'])): ?>
-        <?php
-        // Séparer les dons attribués et non attribués
-        $donsAttribues = [];
-        $donsNonAttribues = [];
-        
-        foreach ($_SESSION['dispatch_details'] as $detail) {
-            if (isset($detail['ville']) && $detail['statut'] === 'Attribué') {
-                $donsAttribues[] = $detail;
-            } else {
-                $donsNonAttribues[] = $detail;
-            }
-        }
-        ?>
+<div class="container">
+    <div class="dispatch-container">
+        <h2 class="page-title">Méthodes de Dispatch</h2>
+        <p class="page-subtitle">Choisissez une méthode de distribution des dons aux villes</p>
 
         <div class="row">
-            <!-- Colonne Dons Attribués -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100" style="border-top: 4px solid #28a745;">
-                    <div class="card-header" style="background-color: #d4edda;">
-                        <h5 class="mb-0 text-success">
-                            <i class="fas fa-check-circle"></i> Dons Attribués
-                        </h5>
-                        <small class="text-muted"><?php echo count($donsAttribues); ?> attribution(s)</small>
-                    </div>
-                    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
-                        <?php if (empty($donsAttribues)): ?>
-                            <p class="text-muted text-center"><i>Aucun don attribué</i></p>
-                        <?php else: ?>
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Don #</th>
-                                            <th>Libellé</th>
-                                            <th>Ville</th>
-                                            <th>Quantité</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($donsAttribues as $detail): ?>
-                                            <tr>
-                                                <td><span class="badge bg-success">#<?php echo $detail['don_id']; ?></span></td>
-                                                <td><?php echo htmlspecialchars($detail['libelle']); ?></td>
-                                                <td><?php echo htmlspecialchars($detail['ville']); ?></td>
-                                                <td><strong><?php echo number_format($detail['quantite_attribuee'], 0, ',', ' '); ?></strong></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Colonne Dons Non Attribués -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100" style="border-top: 4px solid #dc3545;">
-                    <div class="card-header" style="background-color: #f8d7da;">
-                        <h5 class="mb-0 text-danger">
-                            <i class="fas fa-times-circle"></i> Dons Non Attribués
-                        </h5>
-                        <small class="text-muted"><?php echo count($donsNonAttribues); ?> don(s)</small>
-                    </div>
-                    <div class="card-body" style="max-height: 500px; overflow-y: auto;">
-                        <?php if (empty($donsNonAttribues)): ?>
-                            <p class="text-muted text-center"><i>Tous les dons ont été attribués ✓</i></p>
-                        <?php else: ?>
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Don #</th>
-                                            <th>Libellé</th>
-                                            <th>Quantité</th>
-                                            <th>Statut</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($donsNonAttribues as $detail): ?>
-                                            <tr>
-                                                <td><span class="badge bg-danger">#<?php echo $detail['don_id']; ?></span></td>
-                                                <td><?php echo htmlspecialchars($detail['libelle']); ?></td>
-                                                <td><strong><?php echo number_format($detail['quantite'], 0, ',', ' '); ?></strong></td>
-                                                <td>
-                                                    <small class="text-muted"><?php echo htmlspecialchars($detail['statut']); ?></small>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php unset($_SESSION['dispatch_details']); ?>
-    <?php endif; ?>
-
-    <!-- Attributions par ville -->
-    <div class="card mt-4">
-        <div class="card-header">
-            <h5 class="mb-0"><i class="fas fa-city"></i> Attributions par ville</h5>
-        </div>
-        <div class="card-body">
-            <?php if (empty($dispatches)): ?>
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> Aucune attribution pour le moment.
-                </div>
-            <?php else: ?>
-                <?php
-                // Grouper par ville
-                $dispatchesParVille = [];
-                foreach ($dispatches as $dispatch) {
-                    $villeNom = $dispatch['ville_nom'];
-                    if (!isset($dispatchesParVille[$villeNom])) {
-                        $dispatchesParVille[$villeNom] = [];
-                    }
-                    $dispatchesParVille[$villeNom][] = $dispatch;
-                }
-                ?>
-
-                <div class="accordion" id="accordionDispatches">
-                    <?php foreach ($dispatchesParVille as $villeName => $villeDispatches): ?>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading<?php echo md5($villeName); ?>">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                        data-bs-target="#collapse<?php echo md5($villeName); ?>">
-                                    <strong><?php echo htmlspecialchars($villeName); ?></strong>
-                                    <span class="badge bg-primary ms-2"><?php echo count($villeDispatches); ?> attribution(s)</span>
-                                </button>
-                            </h2>
-                            <div id="collapse<?php echo md5($villeName); ?>" class="accordion-collapse collapse" 
-                                 data-bs-parent="#accordionDispatches">
-                                <div class="accordion-body">
-                                    <table class="table table-sm table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Type</th>
-                                                <th>Libellé</th>
-                                                <th>Quantité reçue</th>
-                                                <th>Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($villeDispatches as $dispatch): ?>
-                                                <tr>
-                                                    <td>
-                                                        <?php
-                                                        $typeClass = [
-                                                            'nature' => 'success',
-                                                            'materiel' => 'primary',
-                                                            'argent' => 'warning'
-                                                        ];
-                                                        $typeIcon = [
-                                                            'nature' => 'fa-leaf',
-                                                            'materiel' => 'fa-tools',
-                                                            'argent' => 'fa-coins'
-                                                        ];
-                                                        $class = $typeClass[$dispatch['type']] ?? 'secondary';
-                                                        $icon = $typeIcon[$dispatch['type']] ?? 'fa-question';
-                                                        ?>
-                                                        <span class="badge bg-<?php echo $class; ?>">
-                                                            <i class="fas <?php echo $icon; ?>"></i> 
-                                                            <?php echo ucfirst($dispatch['type']); ?>
-                                                        </span>
-                                                    </td>
-                                                    <td><?php echo htmlspecialchars($dispatch['libelle']); ?></td>
-                                                    <td><strong><?php echo number_format($dispatch['quantite_attribuee'], 0, ',', ' '); ?></strong></td>
-                                                    <td>
-                                                        <small class="text-muted">
-                                                            <?php 
-                                                            $date = new DateTime($dispatch['date_dispatch']);
-                                                            echo $date->format('d/m/Y H:i'); 
-                                                            ?>
-                                                        </small>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+            <div class="col-md-4">
+                <a href="/dispatch/par-date" style="text-decoration: none; color: inherit;">
+                    <div class="dispatch-card">
+                        <div class="dispatch-icon">
+                            <i class="fas fa-calendar-alt"></i>
                         </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+                        <h4>Dispatch par Date</h4>
+                        <p>Les villes qui ont enregistré leurs besoins en premier sont servies en priorité (FIFO - First In First Out)</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="/dispatch/ordre-croissant" style="text-decoration: none; color: inherit;">
+                    <div class="dispatch-card">
+                        <div class="dispatch-icon">
+                            <i class="fas fa-sort-amount-up"></i>
+                        </div>
+                        <h4>Dispatch par Ordre Croissant</h4>
+                        <p>Priorité aux villes ayant les demandes les plus faibles. Les petites demandes sont satisfaites en premier</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="/dispatch/proportionnel" style="text-decoration: none; color: inherit;">
+                    <div class="dispatch-card">
+                        <div class="dispatch-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h4>Dispatch Proportionnel</h4>
+                        <p>Distribution équitable selon la formule : (demande / total) × quantité disponible. Partie entière inférieure uniquement</p>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 </div>
+

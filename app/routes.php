@@ -40,7 +40,12 @@ Flight::route('GET /dons/add', [new DonController(), 'showAddForm']);
 Flight::route('POST /dons/add', [new DonController(), 'store']);
 
 // ================== ROUTES DISPATCH (DEV-NJARY) ==================
-Flight::route('GET /dispatch', [new DispatchController(), 'index']);
+$dispatchController = new DispatchController();
+Flight::route('GET /dispatch', [$dispatchController, 'index']);
+Flight::route('GET /dispatch/par-date', [$dispatchController, 'dispatchParDate']);
+Flight::route('GET /dispatch/ordre-croissant', [$dispatchController, 'dispatchOrdreCroissant']);
+Flight::route('GET /dispatch/proportionnel', [$dispatchController, 'dispatchProportionnel']);
+Flight::route('POST /dispatch/reinitialiser', [$dispatchController, 'reinitialiser']);
 
 // ================== ROUTES BESOINS (DEV-ONJA) ==================
 Flight::route('GET /besoins', ['BesoinsController', 'showForm']);
