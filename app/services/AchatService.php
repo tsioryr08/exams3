@@ -29,24 +29,36 @@ class AchatService
     }
 
     /**
-     * Récupérer les besoins restants avec montant d'argent disponible
-     * @param int|null $villeId
+     * Récupérer les besoins restants agrégés (sans distinction de ville) avec montant d'argent disponible
      * @return array
      */
-    public function getBesoinsRestantsAvecArgent($villeId = null)
+    public function getBesoinsRestantsAvecArgent()
     {
-        $besoins = $this->besoinRepo->getBesoinsRestants($villeId);
+        $besoins = $this->besoinRepo->getTotalBesoinsRestantsAgreges();
+        $donsDisponibles = $this->donRepo->getDonsDisponiblesParTypeLibelle();
         $argentDisponible = $this->getArgentDisponible();
         $fraisPourcentage = $this->configRepo->getFraisAchatPourcentage();
 
-        // Calculer le montant avec frais pour chaque besoin
+        // Calculer le montant avec frais pour chaque besoin et vérifier les dons disponibles
         foreach ($besoins as &$besoin) {
-            $montantSansFrais = $besoin['montant_restant'];
+            $key = $besoin['type'] . '_' . $besoin['libelle'];
+            $donDisponible = $donsDisponibles[$key]['quantite_disponible'] ?? 0;
+            
+            // Quantité qu'il faut vraiment acheter = besoin restant - don disponible
+            $quantiteAacheter = max(0, $besoin['quantite_restante'] - $donDisponible);
+            
+            $besoin['don_disponible'] = $donDisponible;
+            $besoin['quantite_a_acheter'] = $quantiteAacheter;
+            
+            $montantSansFrais = $quantiteAacheter * $besoin['prix_unitaire'];
             $frais = $montantSansFrais * ($fraisPourcentage / 100);
             $besoin['frais_achat'] = $frais;
             $besoin['montant_avec_frais'] = $montantSansFrais + $frais;
             $besoin['pourcentage_frais'] = $fraisPourcentage;
-            $besoin['peut_acheter'] = $besoin['montant_avec_frais'] <= $argentDisponible;
+            
+            // Peut acheter si : quantité à acheter > 0 ET argent suffisant
+            $besoin['peut_acheter'] = ($quantiteAacheter > 0) && ($besoin['montant_avec_frais'] <= $argentDisponible);
+            $besoin['besoin_achat'] = $quantiteAacheter > 0; // Si on a besoin d'acheter (pas juste couvert par dons)
         }
 
         return [
@@ -83,14 +95,16 @@ class AchatService
     }
 
     /**
-     * Simuler des achats (sans valider)
-     * @param array $besoinIds - Liste des IDs de besoins à acheter
+     * Simuler des achats (sans valider) - Nouvelle version agrégée sans villes
+     * @param array $besoinKeys - Liste des clés type_libelle des besoins à acheter
      * @return array
      */
-    public function simulerAchats($besoinIds)
+    public function simulerAchats($besoinKeys)
     {
         $fraisPourcentage = $this->configRepo->getFraisAchatPourcentage();
         $argentDisponible = $this->getArgentDisponible();
+        $besoinsAgreges = $this->besoinRepo->getTotalBesoinsRestantsAgreges();
+        $donsDisponibles = $this->donRepo->getDonsDisponiblesParTypeLibelle();
         
         $simulation = [
             'success' => true,
@@ -103,75 +117,61 @@ class AchatService
             'argent_restant' => $argentDisponible
         ];
 
-        if (empty($besoinIds)) {
+        if (empty($besoinKeys)) {
             $simulation['success'] = false;
             $simulation['errors'][] = 'Aucun besoin sélectionné pour l\'achat';
             return $simulation;
         }
 
-        foreach ($besoinIds as $besoinId) {
-            $besoin = $this->besoinRepo->getById($besoinId);
-            
-            if (!$besoin) {
-                $simulation['errors'][] = "Besoin #$besoinId introuvable";
-                continue;
-            }
-
-            // Vérifier que c'est un besoin achetable
-            if (!in_array($besoin['type'], ['nature', 'materiel'])) {
-                $simulation['errors'][] = "Le besoin '{$besoin['libelle']}' n'est pas achetable (type: {$besoin['type']})";
-                continue;
-            }
-
-            // Calculer la quantité restante
-            $besoinsRestants = $this->besoinRepo->getBesoinsRestants();
-            $besoinRestant = null;
-            foreach ($besoinsRestants as $br) {
-                if ($br['besoin_id'] == $besoinId) {
-                    $besoinRestant = $br;
+        foreach ($besoinKeys as $besoinKey) {
+            // Trouver le besoin agrégé correspondant
+            $besoinAgrege = null;
+            foreach ($besoinsAgreges as $ba) {
+                $key = $ba['type'] . '_' . $ba['libelle'];
+                if ($key === $besoinKey) {
+                    $besoinAgrege = $ba;
                     break;
                 }
             }
-
-            if (!$besoinRestant || $besoinRestant['quantite_restante'] <= 0) {
-                $simulation['errors'][] = "Le besoin '{$besoin['libelle']}' est déjà satisfait";
+            
+            if (!$besoinAgrege) {
+                $simulation['errors'][] = "Besoin '$besoinKey' introuvable";
                 continue;
             }
 
-            // Vérifier si un don direct couvre déjà ce besoin
-            $donDirectExiste = $this->verifierDonDirectExistant($besoin['type'], $besoin['libelle']);
-            if ($donDirectExiste) {
-                $simulation['errors'][] = "Un don direct existe déjà pour '{$besoin['libelle']}' - l'achat n'est pas nécessaire";
+            // Calculer la quantité à acheter (besoin - dons disponibles)
+            $donDisponible = $donsDisponibles[$besoinKey]['quantite_disponible'] ?? 0;
+            $quantiteAacheter = max(0, $besoinAgrege['quantite_restante'] - $donDisponible);
+            
+            if ($quantiteAacheter <= 0) {
+                $simulation['errors'][] = "Le besoin '{$besoinAgrege['libelle']}' est déjà couvert par les dons disponibles";
                 continue;
             }
 
             // Calculer les montants
-            $quantite = $besoinRestant['quantite_restante'];
-            $prixUnitaire = $besoin['prix_unitaire'];
-            $montantSansFrais = $quantite * $prixUnitaire;
+            $prixUnitaire = $besoinAgrege['prix_unitaire'];
+            $montantSansFrais = $quantiteAacheter * $prixUnitaire;
             $frais = $montantSansFrais * ($fraisPourcentage / 100);
             $montantAvecFrais = $montantSansFrais + $frais;
 
             // Vérifier si on a assez d'argent
             if ($simulation['argent_restant'] < $montantAvecFrais) {
-                $simulation['errors'][] = "Argent insuffisant pour acheter '{$besoin['libelle']}' (besoin: " . number_format($montantAvecFrais, 2) . " Ar, disponible: " . number_format($simulation['argent_restant'], 2) . " Ar)";
+                $simulation['errors'][] = "Argent insuffisant pour acheter '{$besoinAgrege['libelle']}' (besoin: " . number_format($montantAvecFrais, 2) . " Ar, disponible: " . number_format($simulation['argent_restant'], 2) . " Ar)";
                 $simulation['success'] = false;
                 continue;
             }
 
             // Ajouter à la simulation
             $simulation['achats'][] = [
-                'besoin_id' => $besoinId,
-                'ville_id' => $besoin['ville_id'],
-                'ville_nom' => $besoin['ville_nom'],
-                'type' => $besoin['type'],
-                'libelle' => $besoin['libelle'],
-                'quantite' => $quantite,
+                'type' => $besoinAgrege['type'],
+                'libelle' => $besoinAgrege['libelle'],
+                'quantite' => $quantiteAacheter,
                 'prix_unitaire' => $prixUnitaire,
                 'montant_sans_frais' => $montantSansFrais,
                 'frais' => $frais,
                 'montant_avec_frais' => $montantAvecFrais,
-                'pourcentage_frais' => $fraisPourcentage
+                'pourcentage_frais' => $fraisPourcentage,
+                'besoin_key' => $besoinKey
             ];
 
             $simulation['total_sans_frais'] += $montantSansFrais;
@@ -184,14 +184,14 @@ class AchatService
     }
 
     /**
-     * Valider les achats et créer les dispatches
-     * @param array $besoinIds
+     * Valider les achats et les créer comme des dons (pas encore dispatchés aux villes)
+     * @param array $besoinKeys - Liste des clés type_libelle des besoins à acheter
      * @return array
      */
-    public function validerAchats($besoinIds)
+    public function validerAchats($besoinKeys)
     {
         // D'abord simuler pour validation
-        $simulation = $this->simulerAchats($besoinIds);
+        $simulation = $this->simulerAchats($besoinKeys);
 
         if (!$simulation['success'] || !empty($simulation['errors'])) {
             return [
@@ -205,41 +205,35 @@ class AchatService
         try {
             $this->pdo->beginTransaction();
 
-            $achatsCreés = [];
+            $donsCreés = [];
             
             foreach ($simulation['achats'] as $achat) {
-                // Créer l'achat
-                $achatId = $this->achatRepo->create([
-                    'ville_id' => $achat['ville_id'],
-                    'besoin_id' => $achat['besoin_id'],
-                    'type' => $achat['type'],
-                    'libelle' => $achat['libelle'],
-                    'quantite' => $achat['quantite'],
-                    'prix_unitaire' => $achat['prix_unitaire'],
-                    'montant_total' => $achat['montant_sans_frais'],
-                    'frais_achat' => $achat['frais'],
-                    'montant_final' => $achat['montant_avec_frais'],
-                    'pourcentage_frais' => $achat['pourcentage_frais'],
-                    'statut' => 'valide'
-                ]);
-
-                // Créer le dispatch correspondant
-                $this->dispatchRepo->createFromAchat(
-                    $achatId,
-                    $achat['ville_id'],
+                // Créer un don avec les quantités achetées
+                // Ces dons seront dispatchés plus tard aux villes via le système de dispatch
+                $success = $this->donRepo->create(
+                    $achat['type'],
                     $achat['libelle'],
                     $achat['quantite']
                 );
 
-                $achatsCreés[] = $achatId;
+                if ($success) {
+                    $donsCreés[] = [
+                        'type' => $achat['type'],
+                        'libelle' => $achat['libelle'],
+                        'quantite' => $achat['quantite']
+                    ];
+                }
             }
+
+            // Enregistrer l'achat dans la table achats pour historique (optionnel)
+            // Pour l'instant on stocke juste les dons
 
             $this->pdo->commit();
 
             return [
                 'success' => true,
-                'message' => count($achatsCreés) . ' achat(s) validé(s) avec succès',
-                'achats_ids' => $achatsCreés,
+                'message' => count($donsCreés) . ' achat(s) validé(s) et ajouté(s) aux dons disponibles',
+                'dons_crees' => $donsCreés,
                 'total_depense' => $simulation['total_avec_frais'],
                 'argent_restant' => $simulation['argent_restant']
             ];
@@ -255,29 +249,4 @@ class AchatService
         }
     }
 
-    /**
-     * Vérifier si un don direct NON DISPATCHÉ existe pour ce type et libellé
-     * @param string $type
-     * @param string $libelle
-     * @return bool
-     */
-    private function verifierDonDirectExistant($type, $libelle)
-    {
-        // Vérifier s'il reste des quantités de dons non dispatchées
-        $stmt = $this->pdo->prepare("
-            SELECT 
-                d.id,
-                d.quantite AS quantite_totale,
-                COALESCE(SUM(disp.quantite_attribuee), 0) AS quantite_dispatchee,
-                (d.quantite - COALESCE(SUM(disp.quantite_attribuee), 0)) AS quantite_restante
-            FROM dons d
-            LEFT JOIN dispatch disp ON disp.don_id = d.id
-            WHERE d.type = ? AND d.libelle = ?
-            GROUP BY d.id
-            HAVING quantite_restante > 0
-        ");
-        $stmt->execute([$type, $libelle]);
-        
-        return $stmt->rowCount() > 0;
-    }
 }

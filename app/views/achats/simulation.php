@@ -136,8 +136,6 @@
                 <table class="table table-hover table-simulation">
                     <thead>
                         <tr>
-                          
-                            <th>Ville</th>
                             <th>Type</th>
                             <th>Libellé</th>
                             <th>Quantité</th>
@@ -150,14 +148,13 @@
                     <tbody>
                         <?php foreach ($simulation['achats'] as $index => $achat): ?>
                             <tr>
-                               
-                                <td><strong><?= htmlspecialchars($achat['ville_nom']) ?></strong></td>
                                 <td>
                                     <span class="badge badge-<?= $achat['type'] ?>">
+                                        <?= $achat['type'] === 'nature' ? '🌾' : '🔨' ?>
                                         <?= ucfirst($achat['type']) ?>
                                     </span>
                                 </td>
-                                <td><?= htmlspecialchars($achat['libelle']) ?></td>
+                                <td><strong><?= htmlspecialchars($achat['libelle']) ?></strong></td>
                                 <td><?= number_format($achat['quantite'], 0, ',', ' ') ?></td>
                                 <td><?= number_format($achat['prix_unitaire'], 2, ',', ' ') ?> Ar</td>
                                 <td><?= number_format($achat['montant_sans_frais'], 2, ',', ' ') ?> Ar</td>
@@ -172,15 +169,15 @@
             <!-- Actions -->
             <div class="mt-4 d-flex justify-content-between">
                 <a href="/achats/besoins-restants" class="btn btn-secondary">
-                    Retour
+                    ↩ Retour
                 </a>
                 <?php if ($simulation['success']): ?>
                     <form method="POST" action="/achats/valider" style="display:inline;">
                         <?php foreach ($simulation['achats'] as $achat): ?>
-                            <input type="hidden" name="besoin_ids[]" value="<?= $achat['besoin_id'] ?>">
+                            <input type="hidden" name="besoin_keys[]" value="<?= htmlspecialchars($achat['besoin_key']) ?>">
                         <?php endforeach; ?>
-                        <button type="submit" class="btn btn-success" onclick="return confirm('Êtes-vous sûr de valider ces achats ? Cette action est irréversible.')">
-                            Valider les achats
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Êtes-vous sûr de valider ces achats ? Ils seront ajoutés aux dons disponibles.')">
+                            ✅ Valider les achats
                         </button>
                     </form>
                 <?php endif; ?>

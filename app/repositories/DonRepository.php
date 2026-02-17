@@ -91,4 +91,45 @@ class DonRepository
             return null;
         }
     }
+
+    /**
+     * Récupérer les quantités de dons disponibles (non dispatches) par type/libellé
+     * @return array - Tableau associatif avec type_libelle => quantité disponible
+     */
+    public function getDonsDisponiblesParTypeLibelle()
+    {
+        try {
+            $sql = "SELECT 
+                        d.type,
+                        d.libelle,
+                        SUM(d.quantite) AS quantite_totale_dons,
+                        COALESCE(SUM(disp.quantite_attribuee), 0) AS quantite_dispatchee,
+                        (SUM(d.quantite) - COALESCE(SUM(disp.quantite_attribuee), 0)) AS quantite_disponible
+                    FROM dons d
+                    LEFT JOIN dispatch disp ON disp.don_id = d.id
+                    WHERE d.type IN ('nature', 'materiel')
+                    GROUP BY d.type, d.libelle
+                    HAVING quantite_disponible > 0
+                    ORDER BY d.type, d.libelle";
+            
+            $stmt = $this->pdo->query($sql);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Convertir en tableau associatif pour accès rapide
+            $donsDisponibles = [];
+            foreach ($results as $row) {
+                $key = $row['type'] . '_' . $row['libelle'];
+                $donsDisponibles[$key] = [
+                    'type' => $row['type'],
+                    'libelle' => $row['libelle'],
+                    'quantite_disponible' => (int)$row['quantite_disponible']
+                ];
+            }
+            
+            return $donsDisponibles;
+        } catch (PDOException $e) {
+            error_log("Erreur récupération dons disponibles: " . $e->getMessage());
+            return [];
+        }
+    }
 }

@@ -363,9 +363,10 @@ class DispatchService
     }
 
     /**
-     * MÉTHODE 3: Dispatch proportionnel
+     * MÉTHODE 3: Dispatch proportionnel avec méthode du plus grand reste (Largest Remainder Method)
      * Distribution proportionnelle : (demande_ville / total_demandes) * quantité_disponible
-     * On prend toujours la partie entière inférieure (floor)
+     * 1. On prend d'abord la partie entière (floor)
+     * 2. Le reste est distribué aux villes avec les plus grands décimaux
      */
     public function dispatchProportionnel()
     {
@@ -414,15 +415,55 @@ class DispatchService
 
                 if ($totalDemandes == 0) continue;
 
-                $quantiteDistribuee = 0;
-
-                // Calculer et attribuer proportionnellement
-                foreach ($besoins as $besoin) {
+                // ===== MÉTHODE DU PLUS GRAND RESTE =====
+                
+                // 1. Calculer les proportions exactes et les parties entières
+                $distributions = [];
+                $totalEntier = 0;
+                
+                foreach ($besoins as $index => $besoin) {
                     // Formule : (demande_ville / total_demandes) * quantité_disponible
-                    $proportion = ($besoin['quantite'] / $totalDemandes) * $quantiteDisponible;
+                    $proportionExacte = ($besoin['quantite'] / $totalDemandes) * $quantiteDisponible;
                     
-                    // Prendre la partie entière inférieure (floor)
-                    $quantiteAAttribuer = floor($proportion);
+                    // Partie entière
+                    $partieEntiere = floor($proportionExacte);
+                    
+                    // Partie décimale
+                    $decimal = $proportionExacte - $partieEntiere;
+                    
+                    $distributions[] = [
+                        'besoin' => $besoin,
+                        'proportion_exacte' => $proportionExacte,
+                        'partie_entiere' => $partieEntiere,
+                        'decimal' => $decimal,
+                        'quantite_finale' => $partieEntiere // On commence avec la partie entière
+                    ];
+                    
+                    $totalEntier += $partieEntiere;
+                }
+                
+                // 2. Calculer le reste à distribuer
+                $reste = $quantiteDisponible - $totalEntier;
+                
+                // 3. Distribuer le reste aux villes avec les plus grands décimaux
+                if ($reste > 0) {
+                    // Trier par décimal décroissant
+                    usort($distributions, function($a, $b) {
+                        return $b['decimal'] <=> $a['decimal'];
+                    });
+                    
+                    // Distribuer le reste une unité à la fois aux plus grands décimaux
+                    for ($i = 0; $i < $reste && $i < count($distributions); $i++) {
+                        $distributions[$i]['quantite_finale']++;
+                    }
+                }
+                
+                // 4. Créer les dispatches avec les quantités finales
+                $quantiteDistribuee = 0;
+                
+                foreach ($distributions as $distribution) {
+                    $besoin = $distribution['besoin'];
+                    $quantiteAAttribuer = $distribution['quantite_finale'];
 
                     if ($quantiteAAttribuer > 0) {
                         // Créer le dispatch
@@ -439,7 +480,7 @@ class DispatchService
                             'libelle' => $don['libelle'],
                             'ville_nom' => $besoin['ville_nom'],
                             'quantite_attribuee' => $quantiteAAttribuer,
-                            'proportion' => $proportion // Pour le tri
+                            'proportion' => $distribution['proportion_exacte'] // Pour le tri
                         ];
 
                         $quantiteDistribuee += $quantiteAAttribuer;
@@ -447,7 +488,8 @@ class DispatchService
                     }
                 }
 
-                // Calculer le reste (dû aux arrondis)
+                // Normalement, avec la méthode du plus grand reste, il ne devrait plus y avoir de reste
+                // Sauf si le nombre de besoins < reste initial
                 $quantiteRestante = $quantiteDisponible - $quantiteDistribuee;
                 if ($quantiteRestante > 0) {
                     $resultats['restes'][] = [

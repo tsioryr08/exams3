@@ -42,6 +42,11 @@
         font-weight: 700;
         font-size: 1.1rem;
     }
+    .stat-reste {
+        color: #0D6EFD; /* bleu vif pour meilleure visibilité */
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
     .table-resultat thead {
         background: linear-gradient(135deg, #B8A8D9 0%, #A8C5E6 100%);
         color: #2C2C2C;
@@ -68,9 +73,9 @@
         margin-bottom: 20px;
     }
     .alert-reste {
-        background-color: #FFF3CD;
-        border-left: 4px solid #FFE5A3;
-        color: #856404;
+        background-color: #f8f9fa; 
+        border-left: 4px solid #f4b445; 
+        color: #af9158; 
         padding: 15px;
         border-radius: 8px;
     }
@@ -106,12 +111,12 @@
             <?php if ($stats['quantite_reste'] > 0): ?>
             <div class="stat-item">
                 <span>Quantité restante :</span>
-                <span class="stat-value text-warning"><?= number_format($stats['quantite_reste'], 0, ',', ' ') ?></span>
+                <span class="stat-value stat-reste"><?= number_format($stats['quantite_reste'], 0, ',', ' ') ?></span>
             </div>
             <?php endif; ?>
         </div>
 
-        <!-- Alertes pour les restes -->
+       
         <?php if (!empty($restes)): ?>
         <div class="alert-reste mb-4">
             <h6 class="fw-bold"><i class="fas fa-exclamation-triangle"></i> Quantités non distribuées</h6>
@@ -126,7 +131,7 @@
         </div>
         <?php endif; ?>
 
-        <!-- Tableau des attributions -->
+      
         <h5 class="section-title">Attributions par Ville</h5>
         <div class="table-responsive">
             <table class="table table-hover">
