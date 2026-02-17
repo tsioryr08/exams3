@@ -195,12 +195,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">
-                            <i class="fas fa-home"></i> Accueil
-                        </a>
-                    </li>
+                <ul class="navbar-nav ">
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="/villes">
                             <i class="fas fa-map-marked-alt"></i> Villes

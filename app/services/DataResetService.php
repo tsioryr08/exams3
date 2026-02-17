@@ -9,40 +9,81 @@ class DataResetService {
     
     // Données initiales des villes
     private const INITIAL_VILLES = [
-        ['nom' => 'Antananarivo', 'region' => 'Analamanga'],
-        ['nom' => 'Toamasina', 'region' => 'Atsinanana'],
-        ['nom' => 'Fianarantsoa', 'region' => 'Haute Matsiatra'],
-        ['nom' => 'Mahajanga', 'region' => 'Boeny']
+        ['nom' => 'Toamasina', 'region' => 'Atsinanana', 'date_creation' => '2026-02-15 08:00:00'],
+        ['nom' => 'Mananjary', 'region' => 'Vatovavy', 'date_creation' => '2026-02-15 08:00:00'],
+        ['nom' => 'Farafangana', 'region' => 'Atsimo-Atsinanana', 'date_creation' => '2026-02-15 08:00:00'],
+        ['nom' => 'Nosy Be', 'region' => 'Diana', 'date_creation' => '2026-02-15 08:00:00'],
+        ['nom' => 'Morondava', 'region' => 'Menabe', 'date_creation' => '2026-02-15 08:00:00']
     ];
     
-    // Données initiales des besoins
+    // Données initiales des besoins (ordre chronologique strict 1-26)
     private const INITIAL_BESOINS = [
-        // Antananarivo (ville_id = 1)
-        ['ville_id' => 1, 'type' => 'nature', 'libelle' => 'riz', 'prix_unitaire' => 2500, 'quantite' => 100],
-        ['ville_id' => 1, 'type' => 'nature', 'libelle' => 'huile', 'prix_unitaire' => 8000, 'quantite' => 50],
-        ['ville_id' => 1, 'type' => 'materiel', 'libelle' => 'tôle', 'prix_unitaire' => 35000, 'quantite' => 30],
-        
-        // Toamasina (ville_id = 2)
-        ['ville_id' => 2, 'type' => 'nature', 'libelle' => 'riz', 'prix_unitaire' => 2500, 'quantite' => 80],
-        ['ville_id' => 2, 'type' => 'materiel', 'libelle' => 'clou', 'prix_unitaire' => 200, 'quantite' => 500],
-        ['ville_id' => 2, 'type' => 'argent', 'libelle' => 'aide_financiere', 'prix_unitaire' => 1, 'quantite' => 1000000],
-        
-        // Fianarantsoa (ville_id = 3)
-        ['ville_id' => 3, 'type' => 'nature', 'libelle' => 'riz', 'prix_unitaire' => 2500, 'quantite' => 60],
-        ['ville_id' => 3, 'type' => 'materiel', 'libelle' => 'tôle', 'prix_unitaire' => 35000, 'quantite' => 20],
-        
-        // Mahajanga (ville_id = 4)
-        ['ville_id' => 4, 'type' => 'nature', 'libelle' => 'huile', 'prix_unitaire' => 8000, 'quantite' => 40],
-        ['ville_id' => 4, 'type' => 'argent', 'libelle' => 'aide_financiere', 'prix_unitaire' => 1, 'quantite' => 500000]
+        // Ordre 1: Toamasina - Bâche
+        ['ville_id' => 1, 'type' => 'materiel', 'libelle' => 'Bâche', 'prix_unitaire' => 15000, 'quantite' => 200, 'date_saisie' => '2026-02-15 00:00:01'],
+        // Ordre 2: Nosy Be - Tôle
+        ['ville_id' => 4, 'type' => 'materiel', 'libelle' => 'Tôle', 'prix_unitaire' => 25000, 'quantite' => 40, 'date_saisie' => '2026-02-15 01:10:00'],
+        // Ordre 3: Mananjary - Argent
+        ['ville_id' => 2, 'type' => 'argent', 'libelle' => 'Argent', 'prix_unitaire' => 1, 'quantite' => 6000000, 'date_saisie' => '2026-02-15 02:20:00'],
+        // Ordre 4: Toamasina - Eau
+        ['ville_id' => 1, 'type' => 'nature', 'libelle' => 'Eau (L)', 'prix_unitaire' => 1000, 'quantite' => 1500, 'date_saisie' => '2026-02-15 03:30:00'],
+        // Ordre 5: Nosy Be - Riz
+        ['ville_id' => 4, 'type' => 'nature', 'libelle' => 'Riz (kg)', 'prix_unitaire' => 3000, 'quantite' => 300, 'date_saisie' => '2026-02-15 04:40:00'],
+        // Ordre 6: Mananjary - Tôle
+        ['ville_id' => 2, 'type' => 'materiel', 'libelle' => 'Tôle', 'prix_unitaire' => 25000, 'quantite' => 80, 'date_saisie' => '2026-02-15 05:50:00'],
+        // Ordre 7: Nosy Be - Argent
+        ['ville_id' => 4, 'type' => 'argent', 'libelle' => 'Argent', 'prix_unitaire' => 1, 'quantite' => 4000000, 'date_saisie' => '2026-02-15 07:00:00'],
+        // Ordre 8: Farafangana - Bâche
+        ['ville_id' => 3, 'type' => 'materiel', 'libelle' => 'Bâche', 'prix_unitaire' => 15000, 'quantite' => 150, 'date_saisie' => '2026-02-15 08:10:00'],
+        // Ordre 9: Mananjary - Riz
+        ['ville_id' => 2, 'type' => 'nature', 'libelle' => 'Riz (kg)', 'prix_unitaire' => 3000, 'quantite' => 500, 'date_saisie' => '2026-02-15 09:20:00'],
+        // Ordre 10: Farafangana - Argent
+        ['ville_id' => 3, 'type' => 'argent', 'libelle' => 'Argent', 'prix_unitaire' => 1, 'quantite' => 8000000, 'date_saisie' => '2026-02-15 10:30:00'],
+        // Ordre 11: Morondava - Riz
+        ['ville_id' => 5, 'type' => 'nature', 'libelle' => 'Riz (kg)', 'prix_unitaire' => 3000, 'quantite' => 700, 'date_saisie' => '2026-02-15 11:40:00'],
+        // Ordre 12: Toamasina - Argent
+        ['ville_id' => 1, 'type' => 'argent', 'libelle' => 'Argent', 'prix_unitaire' => 1, 'quantite' => 12000000, 'date_saisie' => '2026-02-15 12:50:00'],
+        // Ordre 13: Morondava - Argent
+        ['ville_id' => 5, 'type' => 'argent', 'libelle' => 'Argent', 'prix_unitaire' => 1, 'quantite' => 10000000, 'date_saisie' => '2026-02-15 14:00:00'],
+        // Ordre 14: Farafangana - Eau
+        ['ville_id' => 3, 'type' => 'nature', 'libelle' => 'Eau (L)', 'prix_unitaire' => 1000, 'quantite' => 1000, 'date_saisie' => '2026-02-15 15:10:00'],
+        // Ordre 15: Morondava - Bâche
+        ['ville_id' => 5, 'type' => 'materiel', 'libelle' => 'Bâche', 'prix_unitaire' => 15000, 'quantite' => 180, 'date_saisie' => '2026-02-15 16:20:00'],
+        // Ordre 16: Toamasina - Groupe électrogène
+        ['ville_id' => 1, 'type' => 'materiel', 'libelle' => 'Groupe électrogène', 'prix_unitaire' => 2250000, 'quantite' => 3, 'date_saisie' => '2026-02-15 17:30:00'],
+        // Ordre 17: Toamasina - Riz
+        ['ville_id' => 1, 'type' => 'nature', 'libelle' => 'Riz (kg)', 'prix_unitaire' => 3000, 'quantite' => 800, 'date_saisie' => '2026-02-15 18:40:00'],
+        // Ordre 18: Nosy Be - Haricots
+        ['ville_id' => 4, 'type' => 'nature', 'libelle' => 'Haricots', 'prix_unitaire' => 4000, 'quantite' => 200, 'date_saisie' => '2026-02-15 19:50:00'],
+        // Ordre 19: Mananjary - Clous
+        ['ville_id' => 2, 'type' => 'materiel', 'libelle' => 'Clous (kg)', 'prix_unitaire' => 8000, 'quantite' => 60, 'date_saisie' => '2026-02-15 21:00:00'],
+        // Ordre 20: Morondava - Eau
+        ['ville_id' => 5, 'type' => 'nature', 'libelle' => 'Eau (L)', 'prix_unitaire' => 1000, 'quantite' => 1200, 'date_saisie' => '2026-02-15 22:10:00'],
+        // Ordre 21: Farafangana - Riz
+        ['ville_id' => 3, 'type' => 'nature', 'libelle' => 'Riz (kg)', 'prix_unitaire' => 3000, 'quantite' => 600, 'date_saisie' => '2026-02-15 23:20:00'],
+        // Ordre 22: Morondava - Bois
+        ['ville_id' => 5, 'type' => 'materiel', 'libelle' => 'Bois', 'prix_unitaire' => 10000, 'quantite' => 150, 'date_saisie' => '2026-02-16 00:30:00'],
+        // Ordre 23: Toamasina - Tôle
+        ['ville_id' => 1, 'type' => 'materiel', 'libelle' => 'Tôle', 'prix_unitaire' => 25000, 'quantite' => 120, 'date_saisie' => '2026-02-16 01:40:00'],
+        // Ordre 24: Nosy Be - Clous
+        ['ville_id' => 4, 'type' => 'materiel', 'libelle' => 'Clous (kg)', 'prix_unitaire' => 8000, 'quantite' => 30, 'date_saisie' => '2026-02-16 02:50:00'],
+        // Ordre 25: Mananjary - Huile
+        ['ville_id' => 2, 'type' => 'nature', 'libelle' => 'Huile (L)', 'prix_unitaire' => 6000, 'quantite' => 120, 'date_saisie' => '2026-02-16 04:00:00'],
+        // Ordre 26: Farafangana - Bois
+        ['ville_id' => 3, 'type' => 'materiel', 'libelle' => 'Bois', 'prix_unitaire' => 10000, 'quantite' => 100, 'date_saisie' => '2026-02-16 05:10:00']
     ];
     
     // Données initiales des dons
     private const INITIAL_DONS = [
-        ['type' => 'nature', 'libelle' => 'riz', 'quantite' => 120, 'date_saisie' => '2026-02-16 13:00:00'],
-        ['type' => 'materiel', 'libelle' => 'tôle', 'quantite' => 25, 'date_saisie' => '2026-02-16 14:00:00'],
-        ['type' => 'nature', 'libelle' => 'huile', 'quantite' => 60, 'date_saisie' => '2026-02-16 15:00:00'],
-        ['type' => 'argent', 'libelle' => 'aide_financiere', 'quantite' => 1500000, 'date_saisie' => '2026-02-16 16:00:00'],
-        ['type' => 'materiel', 'libelle' => 'clou', 'quantite' => 300, 'date_saisie' => '2026-02-16 17:00:00']
+        // ['type' => 'nature', 'libelle' => 'Riz (kg)', 'quantite' => 2000, 'date_saisie' => '2026-02-14 10:00:00'],
+        // ['type' => 'nature', 'libelle' => 'Eau (L)', 'quantite' => 3000, 'date_saisie' => '2026-02-14 11:00:00'],
+        // ['type' => 'nature', 'libelle' => 'Huile (L)', 'quantite' => 150, 'date_saisie' => '2026-02-14 12:00:00'],
+        // ['type' => 'nature', 'libelle' => 'Haricots', 'quantite' => 250, 'date_saisie' => '2026-02-14 13:00:00'],
+        // ['type' => 'materiel', 'libelle' => 'Tôle', 'quantite' => 200, 'date_saisie' => '2026-02-14 14:00:00'],
+        // ['type' => 'materiel', 'libelle' => 'Bâche', 'quantite' => 400, 'date_saisie' => '2026-02-14 15:00:00'],
+        // ['type' => 'materiel', 'libelle' => 'Clous (kg)', 'quantite' => 100, 'date_saisie' => '2026-02-14 16:00:00'],
+        // ['type' => 'materiel', 'libelle' => 'Bois', 'quantite' => 300, 'date_saisie' => '2026-02-14 17:00:00'],
+        // ['type' => 'materiel', 'libelle' => 'Groupe électrogène', 'quantite' => 5, 'date_saisie' => '2026-02-14 18:00:00'],
+        // ['type' => 'argent', 'libelle' => 'Argent', 'quantite' => 50000000, 'date_saisie' => '2026-02-14 19:00:00']
     ];
     
     // Configuration par défaut
@@ -89,13 +130,10 @@ class DataResetService {
             // 3. Réinsérer les données initiales
             $this->insertInitialData();
             
-            // 4. Réinitialiser la caisse
-            $this->resetCaisse();
-            
-            // 5. Réactiver les vérifications de clés étrangères
+            // 4. Réactiver les vérifications de clés étrangères
             $this->enableForeignKeyChecks();
             
-            // 6. Rafraîchir les vues (si elles existent)
+            // 5. Rafraîchir les vues (si elles existent)
             $this->refreshViews();
             
             return [
@@ -104,8 +142,7 @@ class DataResetService {
                 'details' => [
                     'villes' => count(self::INITIAL_VILLES),
                     'besoins' => count(self::INITIAL_BESOINS),
-                    'dons' => count(self::INITIAL_DONS),
-                    'caisse_initiale' => $this->calculateInitialCaisse()
+                    'dons' => count(self::INITIAL_DONS)
                 ]
             ];
             
@@ -178,14 +215,15 @@ class DataResetService {
      */
     private function insertVilles() {
         $stmt = $this->pdo->prepare("
-            INSERT INTO villes (nom, region)
-            VALUES (?, ?)
+            INSERT INTO villes (nom, region, date_creation)
+            VALUES (?, ?, ?)
         ");
         
         foreach (self::INITIAL_VILLES as $ville) {
             $stmt->execute([
                 $ville['nom'],
-                $ville['region']
+                $ville['region'],
+                $ville['date_creation']
             ]);
         }
     }
@@ -195,8 +233,8 @@ class DataResetService {
      */
     private function insertBesoins() {
         $stmt = $this->pdo->prepare("
-            INSERT INTO besoins (ville_id, type, libelle, prix_unitaire, quantite)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO besoins (ville_id, type, libelle, prix_unitaire, quantite, date_saisie)
+            VALUES (?, ?, ?, ?, ?, ?)
         ");
         
         foreach (self::INITIAL_BESOINS as $besoin) {
@@ -205,7 +243,8 @@ class DataResetService {
                 $besoin['type'],
                 $besoin['libelle'],
                 $besoin['prix_unitaire'],
-                $besoin['quantite']
+                $besoin['quantite'],
+                $besoin['date_saisie']
             ]);
         }
     }
