@@ -21,6 +21,7 @@ require_once __DIR__ . '/controllers/DonController.php';
 require_once __DIR__ . '/controllers/DispatchController.php';
 require_once __DIR__ . '/controllers/BesoinsController.php';
 require_once __DIR__ . '/controllers/VilleController.php';
+require_once __DIR__ . '/controllers/ResetController.php';
 require_once __DIR__ . '/controllers/AchatController.php';
 require_once __DIR__ . '/controllers/RecapController.php';
 
@@ -65,3 +66,8 @@ $recapController = new RecapController();
 
 Flight::route('GET /recap', [$recapController, 'index']);
 Flight::route('GET /recap/ajax', [$recapController, 'ajax']);
+
+// ================== ROUTES ADMINISTRATION - RESET DONNÉES ==================
+Flight::route('GET /admin/reset', ['ResetController', 'showResetPage']);
+Flight::route('POST /admin/reset', ['ResetController', 'processReset']);
+Flight::route('POST /api/reset', ['ResetController', 'apiReset']); // API optionnelle

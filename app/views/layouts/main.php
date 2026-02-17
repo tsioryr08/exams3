@@ -182,6 +182,9 @@
     </style>
 </head>
 <body>
+    <!-- Bouton de réinitialisation -->
+    <?php include Flight::get('flight.views.path') . '/partials/reset_button.php'; ?>
+    
     <!-- Header -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
