@@ -85,7 +85,7 @@
     <div class="achats-container">
         <div class="page-header">
             <h2 class="page-title mb-2">🛒 Achats - Besoins Restants</h2>
-            <p class="text-muted">Sélectionnez les besoins à acheter avec les dons en argent</p>
+            <p class="text-muted">Sélectionnez les besoins à acheter avec les dons en argent. Les achats seront ajoutés aux dons disponibles.</p>
         </div>
 
         <div class="info-card">
@@ -94,26 +94,10 @@
             <small>Frais d'achat appliqués : <?= $frais_pourcentage ?>%</small>
         </div>
 
-        <div class="filter-section">
-            <form method="GET" action="/achats/besoins-restants" class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Filtrer par ville :</label>
-                    <select name="ville_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Toutes les villes --</option>
-                        <?php foreach ($villes as $ville): ?>
-                            <option value="<?= $ville['id'] ?>" <?= $ville_id_selected == $ville['id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($ville['nom']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-            </form>
-        </div>
-
         <?php if (empty($besoins)): ?>
             <div class="alert alert-info">
                 <strong>ℹ️ Information :</strong> Aucun besoin restant à acheter.
-                Tous les besoins sont déjà satisfaits !
+                Tous les besoins sont déjà satisfaits ou couverts par les dons disponibles !
             </div>
         <?php else: ?>
             <form method="POST" action="/achats/simuler" id="formAchats">
@@ -124,10 +108,11 @@
                                 <th width="50">
                                     <input type="checkbox" id="selectAll" title="Tout sélectionner">
                                 </th>
-                                <th>Ville</th>
                                 <th>Type</th>
                                 <th>Libellé</th>
-                                <th>Quantité</th>
+                                <th>Total Besoins</th>
+                                <th>Dons Dispo.</th>
+                                <th>Qté à Acheter</th>
                                 <th>Prix unitaire</th>
                                 <th>Montant HT</th>
                                 <th>Frais (<?= $frais_pourcentage ?>%)</th>
@@ -136,32 +121,44 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($besoins as $besoin): ?>
+                            <?php foreach ($besoins as $besoin): 
+                                $besoinKey = $besoin['type'] . '_' . $besoin['libelle'];
+                                $needsAchat = $besoin['besoin_achat'] ?? true;
+                            ?>
                                 <tr class="<?= $besoin['peut_acheter'] ? 'achetable' : 'non-achetable' ?>">
                                     <td>
                                         <input 
                                             type="checkbox" 
-                                            name="besoin_ids[]" 
-                                            value="<?= $besoin['besoin_id'] ?>"
+                                            name="besoin_keys[]" 
+                                            value="<?= htmlspecialchars($besoinKey) ?>"
                                             class="besoin-checkbox"
-                                            <?= !$besoin['peut_acheter'] ? 'disabled' : '' ?>
+                                            <?= !$besoin['peut_acheter'] || !$needsAchat ? 'disabled' : '' ?>
                                         >
                                     </td>
-                                    <td><strong><?= htmlspecialchars($besoin['ville_nom']) ?></strong></td>
                                     <td>
                                         <span class="badge badge-<?= $besoin['type'] ?>">
                                             <?= $besoin['type'] === 'nature' ? '🌾' : '🔨' ?>
                                             <?= ucfirst($besoin['type']) ?>
                                         </span>
                                     </td>
-                                    <td><?= htmlspecialchars($besoin['libelle']) ?></td>
+                                    <td><strong><?= htmlspecialchars($besoin['libelle']) ?></strong></td>
                                     <td><?= number_format($besoin['quantite_restante'], 0, ',', ' ') ?></td>
+                                    <td>
+                                        <span class="badge" style="background-color: #17a2b8; color: white;">
+                                            <?= number_format($besoin['don_disponible'] ?? 0, 0, ',', ' ') ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <strong><?= number_format($besoin['quantite_a_acheter'] ?? 0, 0, ',', ' ') ?></strong>
+                                    </td>
                                     <td><?= number_format($besoin['prix_unitaire'], 2, ',', ' ') ?> Ar</td>
-                                    <td><?= number_format($besoin['montant_restant'], 2, ',', ' ') ?> Ar</td>
+                                    <td><?= number_format(($besoin['quantite_a_acheter'] ?? 0) * $besoin['prix_unitaire'], 2, ',', ' ') ?> Ar</td>
                                     <td><?= number_format($besoin['frais_achat'], 2, ',', ' ') ?> Ar</td>
                                     <td><strong><?= number_format($besoin['montant_avec_frais'], 2, ',', ' ') ?> Ar</strong></td>
                                     <td>
-                                        <?php if ($besoin['peut_acheter']): ?>
+                                        <?php if (!$needsAchat): ?>
+                                            <span class="badge" style="background-color: #6c757d;">✓ Couvert par dons</span>
+                                        <?php elseif ($besoin['peut_acheter']): ?>
                                             <span class="badge" style="background-color: #28a745;">✓ Achetable</span>
                                         <?php else: ?>
                                             <span class="badge" style="background-color: #dc3545;">✗ Argent insuffisant</span>
@@ -178,7 +175,7 @@
                         <span id="selectedCount" class="text-muted">0 besoin(s) sélectionné(s)</span>
                     </div>
                     <div>
-                        <a href="/achats/liste" class="btn btn-secondary me-2"> Voir les achats</a>
+                        <a href="/dons" class="btn btn-secondary me-2">↩ Retour aux dons</a>
                         <button type="submit" class="btn btn-simuler" id="btnSimuler" disabled>
                             Simuler les achats
                         </button>
@@ -187,10 +184,12 @@
             </form>
 
             <div class="alert alert-warning mt-3">
-                <strong> Bon a savoir :</strong> 
+                <strong>💡 Bon à savoir :</strong> 
                 <ul class="mb-0 mt-2">
                     <li>Les achats avec frais de <?= $frais_pourcentage ?>% seront déduits de l'argent disponible</li>
-                    <li>Vous ne pouvez acheter que les besoins en <strong>nature</strong> et <strong>matériel</strong></li>
+                    <li>Les achats validés seront <strong>ajoutés aux dons disponibles</strong></li>
+                    <li>Ces dons seront ensuite <strong>dispatchés aux villes</strong> via le système de dispatch</li>
+                    <li>Les besoins en gris sont déjà couverts par les dons disponibles</li>
                     <li>Les besoins en rouge ne peuvent pas être achetés (argent insuffisant)</li>
                 </ul>
             </div>

@@ -20,21 +20,13 @@ class AchatController
      */
     public function showBesoinsRestants()
     {
-        $villeId = $_GET['ville_id'] ?? null;
-        $data = $this->achatService->getBesoinsRestantsAvecArgent($villeId);
-
-        // Récupérer toutes les villes pour le filtre
-        $pdo = Flight::db();
-        $stmt = $pdo->query("SELECT id, nom FROM villes ORDER BY nom");
-        $villes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $data = $this->achatService->getBesoinsRestantsAvecArgent();
 
         Flight::render('achats/besoins_restants', [
             'title' => 'Achats - Besoins Restants',
             'besoins' => $data['besoins'],
             'argent_disponible' => $data['argent_disponible'],
-            'frais_pourcentage' => $data['frais_pourcentage'],
-            'villes' => $villes,
-            'ville_id_selected' => $villeId
+            'frais_pourcentage' => $data['frais_pourcentage']
         ], 'content');
 
         Flight::render('layouts/main', [
@@ -48,15 +40,15 @@ class AchatController
      */
     public function simuler()
     {
-        $besoinIds = $_POST['besoin_ids'] ?? [];
+        $besoinKeys = $_POST['besoin_keys'] ?? [];
         
-        if (empty($besoinIds)) {
+        if (empty($besoinKeys)) {
             $_SESSION['error'] = 'Veuillez sélectionner au moins un besoin';
             Flight::redirect('/achats/besoins-restants');
             return;
         }
 
-        $simulation = $this->achatService->simulerAchats($besoinIds);
+        $simulation = $this->achatService->simulerAchats($besoinKeys);
 
         // Stocker la simulation en session
         $_SESSION['simulation'] = $simulation;
@@ -77,15 +69,15 @@ class AchatController
      */
     public function valider()
     {
-        $besoinIds = $_POST['besoin_ids'] ?? [];
+        $besoinKeys = $_POST['besoin_keys'] ?? [];
         
-        if (empty($besoinIds)) {
+        if (empty($besoinKeys)) {
             $_SESSION['error'] = 'Aucun besoin à valider';
             Flight::redirect('/achats/besoins-restants');
             return;
         }
 
-        $result = $this->achatService->validerAchats($besoinIds);
+        $result = $this->achatService->validerAchats($besoinKeys);
 
         if ($result['success']) {
             $_SESSION['success'] = $result['message'];
@@ -94,32 +86,20 @@ class AchatController
             $_SESSION['errors'] = $result['errors'] ?? [];
         }
 
-        Flight::redirect('/achats/liste');
+        Flight::redirect('/dons');
     }
 
     /**
      * Afficher la liste des achats effectués
      * GET /achats/liste
+     * 
+     * NOTE: Cette route est obsolète dans la nouvelle logique.
+     * Les achats sont maintenant directement ajoutés aux dons.
+     * Redirigeons vers la page des dons.
      */
     public function liste()
     {
-        $pdo = Flight::db();
-        $achatRepo = new AchatRepository($pdo);
-        $achats = $achatRepo->getAll();
-
-        $success = $_SESSION['success'] ?? '';
-        $error = $_SESSION['error'] ?? '';
-        unset($_SESSION['success'], $_SESSION['error']);
-
-        Flight::render('achats/liste', [
-            'title' => 'Liste des Achats',
-            'achats' => $achats,
-            'success' => $success,
-            'error' => $error
-        ], 'content');
-
-        Flight::render('layouts/main', [
-            'title' => 'Liste des Achats'
-        ]);
+        $_SESSION['info'] = 'Les achats validés sont maintenant visibles dans la liste des dons.';
+        Flight::redirect('/dons');
     }
 }

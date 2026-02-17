@@ -195,4 +195,35 @@ class BesoinRepository
             return [];
         }
     }
+
+    /**
+     * Récupérer les besoins restants agrégés (total par type/libellé sans distinction de ville)
+     * Uniquement nature et matériel (achetables)
+     * @return array
+     */
+    public function getTotalBesoinsRestantsAgreges()
+    {
+        try {
+            $sql = "SELECT 
+                        b.type,
+                        b.libelle,
+                        b.prix_unitaire,
+                        SUM(b.quantite) AS quantite_totale_besoins,
+                        COALESCE(SUM(d.quantite_attribuee), 0) AS quantite_totale_satisfaite,
+                        (SUM(b.quantite) - COALESCE(SUM(d.quantite_attribuee), 0)) AS quantite_restante,
+                        (b.prix_unitaire * (SUM(b.quantite) - COALESCE(SUM(d.quantite_attribuee), 0))) AS montant_restant
+                    FROM besoins b
+                    LEFT JOIN dispatch d ON d.libelle = b.libelle
+                    WHERE b.type IN ('nature', 'materiel')
+                    GROUP BY b.type, b.libelle, b.prix_unitaire
+                    HAVING quantite_restante > 0
+                    ORDER BY b.type, b.libelle";
+            
+            $stmt = $this->pdo->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erreur récupération besoins agrégés: " . $e->getMessage());
+            return [];
+        }
+    }
 }
