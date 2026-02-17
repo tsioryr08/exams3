@@ -74,7 +74,8 @@ class DispatchController
             'resultats' => $resultats['attributions'] ?? [],
             'restes' => $resultats['restes'] ?? [],
             'stats' => $resultats['stats'] ?? [],
-            'par_ville' => $resultats['par_ville'] ?? []
+            'par_ville' => $resultats['par_ville'] ?? [],
+            'details_par_ville' => $resultats['details_par_ville'] ?? []
         ], 'content');
         
         Flight::render('layouts/main', [

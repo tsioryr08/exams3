@@ -193,6 +193,55 @@
             </table>
         </div>
 
+        <!-- Détails des besoins par ville -->
+        <?php if (!empty($details_par_ville)): ?>
+        <h5 class="section-title">Détails des Besoins par Ville</h5>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Ville</th>
+                        <th>Type</th>
+                        <th>Libellé</th>
+                        <th>Qté demandée</th>
+                        <th>Qté reçue</th>
+                        <th>Taux</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    $currentVille = '';
+                    foreach ($details_par_ville as $detail): 
+                        $showVille = ($currentVille !== $detail['ville_nom']);
+                        $currentVille = $detail['ville_nom'];
+                        $taux = $detail['quantite_demandee'] > 0 ? ($detail['quantite_recue'] / $detail['quantite_demandee']) * 100 : 0;
+                        $badgeColor = $taux >= 75 ? '#A8D5BA' : ($taux >= 50 ? '#FFE5A3' : '#FFD4A3');
+                    ?>
+                        <tr>
+                            <td><?= $showVille ? '<strong>'.htmlspecialchars($detail['ville_nom']).'</strong>' : '' ?></td>
+                            <td>
+                                <span class="badge" style="background-color: 
+                                    <?= $detail['type'] === 'nature' ? '#A8D5BA' : 
+                                        ($detail['type'] === 'materiel' ? 'burlywood' : '#FFE5A3') ?>; 
+                                    color: #333;">
+                                    <?= ucfirst($detail['type']) ?>
+                                </span>
+                            </td>
+                            <td><?= htmlspecialchars($detail['libelle']) ?></td>
+                            <td><?= number_format($detail['quantite_demandee'], 0, ',', ' ') ?></td>
+                            <td><?= number_format($detail['quantite_recue'], 0, ',', ' ') ?></td>
+                            <td>
+                                <span class="badge" style="background-color: <?= $badgeColor ?>; color: #333;">
+                                    <?= number_format($taux, 1) ?>%
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php endif; ?>
+
         <!-- Détail par ville -->
         <?php if (!empty($par_ville)): ?>
         <h5 class="section-title">Récapitulatif par Ville</h5>
@@ -266,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success) {
                 showAlert('Dispatches réinitialisés avec succès !', 'success');
-                // Rediriger vers la page d'index après 1.5 secondes
+                // Rediriger vers la page d'index (ne pas recharger car ça re-dispatch !)
                 setTimeout(() => {
                     window.location.href = '/dispatch';
                 }, 1500);

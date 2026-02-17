@@ -248,6 +248,9 @@ class DispatchService
                 return strtotime($a['premiere_date']) - strtotime($b['premiere_date']);
             });
 
+            // Ajouter les détails par ville
+            $resultats['details_par_ville'] = $this->getDetailsParVille();
+
         } catch (Exception $e) {
             error_log("Erreur dispatch par date: " . $e->getMessage());
         }
@@ -348,6 +351,9 @@ class DispatchService
             usort($resultats['par_ville'], function($a, $b) {
                 return $a['demandee'] - $b['demandee'];
             });
+
+            // Ajouter les détails par ville
+            $resultats['details_par_ville'] = $this->getDetailsParVille();
 
         } catch (Exception $e) {
             error_log("Erreur dispatch ordre croissant: " . $e->getMessage());
@@ -468,6 +474,9 @@ class DispatchService
                 return $b['demandee'] - $a['demandee'];
             });
 
+            // Ajouter les détails par ville
+            $resultats['details_par_ville'] = $this->getDetailsParVille();
+
         } catch (Exception $e) {
             error_log("Erreur dispatch proportionnel: " . $e->getMessage());
         }
@@ -521,6 +530,29 @@ class DispatchService
             LEFT JOIN dispatch d ON d.ville_id = v.id AND d.libelle = b.libelle
             GROUP BY v.id, v.nom
             ORDER BY v.nom
+        ");
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Récupérer les détails des besoins et dispatches par ville
+     */
+    private function getDetailsParVille()
+    {
+        $db = Flight::db();
+        $stmt = $db->query("
+            SELECT 
+                v.nom as ville_nom,
+                b.type,
+                b.libelle,
+                b.quantite as quantite_demandee,
+                COALESCE(SUM(d.quantite_attribuee), 0) as quantite_recue
+            FROM villes v
+            INNER JOIN besoins b ON b.ville_id = v.id
+            LEFT JOIN dispatch d ON d.ville_id = v.id AND d.libelle = b.libelle
+            GROUP BY v.id, v.nom, b.id, b.type, b.libelle, b.quantite
+            ORDER BY v.nom, b.type, b.libelle
         ");
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
